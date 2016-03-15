@@ -65,5 +65,22 @@ namespace RoomArrangement
 			var tempRec = new Rectangle(Space.YDimension, Space.XDimension);
 			Space = tempRec;
 		}
+
+		public void Adjust(int x, int y, bool YOrientation)
+		{
+			var tempPt = new Point(x, y);
+			Anchor = tempPt;
+
+			char tempChar;
+
+			// 0 is X, 1 is Y. Feels better this way, but doesn't really matter.
+			if (YOrientation)
+				tempChar = 'Y';
+			else
+				tempChar = 'X';
+
+			if (Orientation != 'O' && tempChar != Orientation)
+				Rotate();
+		}
 	}
 }
