@@ -32,7 +32,14 @@ namespace RoomArrangement
 			{
 				int x = Convert.ToInt32(c.ToBinaryString(i, 4), 2);
 				int y = Convert.ToInt32(c.ToBinaryString(i + 4, 4), 2);
-				bool o = Convert.ToBoolean(c.ToBinaryString(i + 8, 1));
+				int oTemp = Convert.ToInt32(c.ToBinaryString(i + 8, 1), 2);
+
+				bool o;
+
+				if (oTemp == 0)
+					o = false;
+				else
+					o = true;
 
 				var j = i / 9;
 
