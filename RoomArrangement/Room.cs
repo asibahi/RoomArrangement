@@ -16,13 +16,10 @@ namespace RoomArrangement
 		private static int Population { get; set; }
 
 		// Geometric properties
+		// Note the Anchor here is supposed to be the SW Corner.
 		public Rectangle Space { get; set; }
 		public Point Anchor { get; set; }
-		public Point Corner
-		{
-			get { return Anchor; }
-			set { Anchor = value; }
-		}
+
 		public char Orientation
 		{
 			get
@@ -35,7 +32,17 @@ namespace RoomArrangement
 					return 'O';
 			}
 		}
-		public int Floor { get; set; }
+
+		public Point Center
+		{
+			get
+			{
+				var pt = new Point(Anchor);
+				pt.X += Space.XDimension / 2;
+				pt.Y += Space.YDimension / 2;
+				return pt;
+			}
+		}
 
 		// Relational properties
 		public List<Room> AdjacentRooms { get; private set; }
@@ -68,16 +75,14 @@ namespace RoomArrangement
 
 		public void Adjust(int x, int y, bool YOrientation)
 		{
+			// Setting the new Anchor
 			var tempPt = new Point(x, y);
 			Anchor = tempPt;
 
-			char tempChar;
-
+			// Setting the new Orientation
 			// 0 is X, 1 is Y. Feels better this way, but doesn't really matter.
-			if (YOrientation)
-				tempChar = 'Y';
-			else
-				tempChar = 'X';
+
+			char tempChar = YOrientation ? 'Y' : 'X';
 
 			if (Orientation != 'O' && tempChar != Orientation)
 				Rotate();

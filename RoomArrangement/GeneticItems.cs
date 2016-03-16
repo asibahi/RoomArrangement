@@ -57,6 +57,7 @@ namespace RoomArrangement
 					var r2 = r1.AdjacentRooms[j];
 
 					// PLACEHOLDER : HOW TO CALC THE CENTER OF THE ROOMS?
+					
 
 				}
 			}
