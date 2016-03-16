@@ -15,7 +15,7 @@ namespace RoomArrangement
 			List.Add(r);
 		}
 
-		static int Count
+		static public int Count
 		{
 			get { return List.Count; }
 		}

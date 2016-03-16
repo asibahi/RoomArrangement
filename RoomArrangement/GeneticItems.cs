@@ -34,12 +34,7 @@ namespace RoomArrangement
 				int y = Convert.ToInt32(c.ToBinaryString(i + 4, 4), 2);
 				int oTemp = Convert.ToInt32(c.ToBinaryString(i + 8, 1), 2);
 
-				bool o;
-
-				if (oTemp == 0)
-					o = false;
-				else
-					o = true;
+				bool o = Convert.ToBoolean(oTemp);
 
 				var j = i / 9;
 
@@ -49,6 +44,10 @@ namespace RoomArrangement
 			// Evaluate fitness for every couple so it is a fraction of 1 (1 being perfectly adjacent)
 			// then add the individual fitness value to fitnessList
 
+			for (int i =0; i < RoomDB.Count; i++)
+			{
+
+			}
 
 
 
