@@ -43,10 +43,22 @@ namespace RoomArrangement
 
 			// Evaluate fitness for every couple so it is a fraction of 1 (1 being perfectly adjacent)
 			// then add the individual fitness value to fitnessList
+			//
+			// So each fitness value is	1 / (1 + fValue)
+			// Which becomes smaller the large fValue is. But if fValue == 0 then it becomes 1.
 
-			for (int i =0; i < RoomDB.Count; i++)
+
+			// Related rooms logic
+			for (int i = 0; i < RoomDB.Count; i++)
 			{
+				var r1 = RoomDB.List[i];
+				for (int j = 0; j < r1.AdjacentRooms.Count; j++)
+				{
+					var r2 = r1.AdjacentRooms[j];
 
+					// PLACEHOLDER : HOW TO CALC THE CENTER OF THE ROOMS?
+
+				}
 			}
 
 
