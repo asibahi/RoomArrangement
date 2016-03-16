@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Math;
 using GAF;
 
 namespace RoomArrangement
@@ -51,23 +52,25 @@ namespace RoomArrangement
 			// Related rooms logic
 			for (int i = 0; i < RoomDB.Count; i++)
 			{
+				// Using double because all the numbers will factor into fValue, which is a double.
 				var r1 = RoomDB.List[i];
+				double rec1X = r1.Space.XDimension;
+				double rec1Y = r1.Space.YDimension;
+				double cnt1X = r1.Center.X;
+				double cnt1Y = r1.Center.Y;
+
 				for (int j = 0; j < r1.AdjacentRooms.Count; j++)
 				{
 					var r2 = r1.AdjacentRooms[j];
+					double rec2X = r2.Space.XDimension;
+					double rec2Y = r2.Space.YDimension;
+					double cnt2X = r2.Center.X;
+					double cnt2Y = r2.Center.Y;
 
-					// PLACEHOLDER : HOW TO CALC THE CENTER OF THE ROOMS?
+					// PLACEHOLDER : HOW TO CALC THE DISTANCE OF THE ROOMS?
 					
-
 				}
 			}
-
-
-
-
-
-
-
 
 			double fitness = 1;
 			foreach (double d in fitnessList)
