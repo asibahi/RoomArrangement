@@ -61,16 +61,78 @@ namespace RoomArrangement
 
 				for (int j = 0; j < r1.AdjacentRooms.Count; j++)
 				{
+
+					double fValue;
+
 					var r2 = r1.AdjacentRooms[j];
 					double rec2X = r2.Space.XDimension;
 					double rec2Y = r2.Space.YDimension;
 					double cnt2X = r2.Center.X;
 					double cnt2Y = r2.Center.Y;
 
-					// PLACEHOLDER : HOW TO CALC THE DISTANCE OF THE ROOMS?
-					
+					var xDistance = Abs(cnt1X - cnt2X);
+					var yDistance = Abs(cnt1Y - cnt2Y);
+
+					var xSize = (rec1X / 2) + (rec2X / 2);
+					var ySize = (rec1Y / 2) + (rec2Y / 2);
+
+					if (xDistance >= xSize)
+					{
+						var fitnessFactor = xDistance - xSize;
+						fValue = 1 / (1 + fitnessFactor);
+						fitnessList.Add(fValue);
+					}
+
+					if (yDistance >= ySize)
+					{
+						var fitnessFactor = yDistance - ySize;
+						fValue = 1 / (1 + fitnessFactor);
+						fitnessList.Add(fValue);
+					}
 				}
 			}
+
+			// Intersection Logic
+			for (int i = 0; i < RoomDB.Count; i++)
+			{
+				// Using double because all the numbers will factor into fValue, which is a double.
+				var r1 = RoomDB.List[i];
+				double rec1X = r1.Space.XDimension;
+				double rec1Y = r1.Space.YDimension;
+				double cnt1X = r1.Center.X;
+				double cnt1Y = r1.Center.Y;
+
+				for (int j = 0; j < RoomDB.Count; j++)
+				{
+
+					double fValue;
+
+					var r2 = RoomDB.List[j];
+					double rec2X = r2.Space.XDimension;
+					double rec2Y = r2.Space.YDimension;
+					double cnt2X = r2.Center.X;
+					double cnt2Y = r2.Center.Y;
+
+					var xDistance = Abs(cnt1X - cnt2X);
+					var yDistance = Abs(cnt1Y - cnt2Y);
+
+					var xSize = (rec1X / 2) + (rec2X / 2);
+					var ySize = (rec1Y / 2) + (rec2Y / 2);
+
+					if (xDistance < xSize)
+					{
+						fValue = 1 / (1 + (2 * (xSize - xDistance)));
+						fitnessList.Add(fValue);
+					}
+
+					if (yDistance < ySize)
+					{
+						fValue = 1 / (1 + (2 * (ySize - yDistance)));
+						fitnessList.Add(fValue);
+					}
+				}
+			}
+
 
 			double fitness = 1;
 			foreach (double d in fitnessList)
