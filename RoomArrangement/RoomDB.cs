@@ -19,5 +19,11 @@ namespace RoomArrangement
 		{
 			get { return List.Count; }
 		}
+
+		static RoomDB()
+		{
+			List = new List<Room>();
+		}
 	}
+}
 }

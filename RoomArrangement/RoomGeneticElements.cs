@@ -8,7 +8,7 @@ using GAF;
 
 namespace RoomArrangement
 {
-	static class GeneticItems
+	static class RoomGeneticElements
 	{
 		public static double CalculateFitness(Chromosome c)
 		{
@@ -78,15 +78,13 @@ namespace RoomArrangement
 
 					if (xDistance >= xSize)
 					{
-						var fitnessFactor = xDistance - xSize;
-						fValue = 1 / (1 + fitnessFactor);
+						fValue = 1 / (1 + (xDistance - xSize));
 						fitnessList.Add(fValue);
 					}
 
 					if (yDistance >= ySize)
 					{
-						var fitnessFactor = yDistance - ySize;
-						fValue = 1 / (1 + fitnessFactor);
+						fValue = 1 / (1 + (yDistance - ySize));
 						fitnessList.Add(fValue);
 					}
 				}

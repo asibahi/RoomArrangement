@@ -12,14 +12,12 @@ namespace RoomArrangement
 		// Meta properties
 		public int ID { get; private set; }
 		public string Name { get; private set; }
-
 		private static int Population { get; set; }
 
 		// Geometric properties
 		// Note the Anchor here is supposed to be the SW Corner.
 		public Rectangle Space { get; set; }
 		public Point Anchor { get; set; }
-
 		public char Orientation
 		{
 			get
@@ -32,7 +30,6 @@ namespace RoomArrangement
 					return 'O';
 			}
 		}
-
 		public Point Center
 		{
 			get
@@ -46,6 +43,18 @@ namespace RoomArrangement
 
 		// Relational properties
 		public List<Room> AdjacentRooms { get; private set; }
+
+		// Empty Constructor
+		public Room()
+		{
+			ID = ++Population;
+			Name = string.Format("Room Number {0}", ID);
+
+			Space = new Rectangle();
+			Anchor = new Point();
+
+			RoomDB.Add(this);
+		}
 
 		// Constuctor
 		public Room(string s, Point pt, Rectangle rec)
