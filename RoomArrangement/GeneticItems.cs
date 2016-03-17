@@ -141,9 +141,12 @@ namespace RoomArrangement
 			return fitness;
 		}
 
-		public static bool TerminateAlgorithm(Population population, int currentGeneration, long currentEvaluation)
+		public static bool Terminate(Population population, int currentGeneration, long currentEvaluation)
 		{
-			return currentGeneration > 1000;
+			var a = currentGeneration > 1000;
+			var b = population.MaximumFitness == 1;
+
+			return (a || b);
 		}
 	}
 }
