@@ -10,7 +10,7 @@ namespace RoomArrangement
 {
 	static class GeneticItems
 	{
-		private static double CalculateFitness(Chromosome c)
+		public static double CalculateFitness(Chromosome c)
 		{
 			// Assuming each chromosome represents a certain arrangmenet of THREE rooms
 			// The chrome will have, for each room:
@@ -52,7 +52,7 @@ namespace RoomArrangement
 			// Related rooms logic
 			for (int i = 0; i < RoomDB.Count; i++)
 			{
-				// Using double because all the numbers will factor into fValue, which is a double.
+				// Using double because all the numbers will factor into fValue, which has to be a double.
 				var r1 = RoomDB.List[i];
 				double rec1X = r1.Space.XDimension;
 				double rec1Y = r1.Space.YDimension;
@@ -139,6 +139,11 @@ namespace RoomArrangement
 				fitness *= d;
 
 			return fitness;
+		}
+
+		public static bool TerminateAlgorithm(Population population, int currentGeneration, long currentEvaluation)
+		{
+			return currentGeneration > 1000;
 		}
 	}
 }
