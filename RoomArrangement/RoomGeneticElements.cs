@@ -76,17 +76,18 @@ namespace RoomArrangement
 					var xSize = (rec1X / 2) + (rec2X / 2);
 					var ySize = (rec1Y / 2) + (rec2Y / 2);
 
-					if (xDistance >= xSize)
+					if (xDistance > xSize)
 					{
-						fValue = 1 / (1 + (xDistance - xSize));
+						fValue = 1 - ((xDistance - xSize) / xDistance);
 						fitnessList.Add(fValue);
 					}
 
-					if (yDistance >= ySize)
+					if (yDistance > ySize)
 					{
-						fValue = 1 / (1 + (yDistance - ySize));
+						fValue = 1 - ((yDistance - ySize) / yDistance);
 						fitnessList.Add(fValue);
 					}
+
 				}
 			}
 
@@ -117,26 +118,32 @@ namespace RoomArrangement
 					var xSize = (rec1X / 2) + (rec2X / 2);
 					var ySize = (rec1Y / 2) + (rec2Y / 2);
 
-					if (xDistance < xSize)
+					if (xDistance < xSize && yDistance < ySize)
 					{
-						fValue = 1 / (1 + (2 * (xSize - xDistance)));
-						fitnessList.Add(fValue);
-					}
+						var x = 1 - ((xSize - xDistance) / xSize);
+						var y = 1 - ((ySize - yDistance) / ySize);
 
-					if (yDistance < ySize)
-					{
-						fValue = 1 / (1 + (2 * (ySize - yDistance)));
+						// fValue = x < y ? x : y;
+						fValue = x * y;
+						// fValue = (x + y) / 2;
 						fitnessList.Add(fValue);
+
+
+					}
+					else
+					{
+						fitnessList.Add(1);
 					}
 				}
 			}
 
+			fitnessList.Add(1d);
 			return fitnessList.Average();
 		}
 
 		public static bool Terminate(Population population, int currentGeneration, long currentEvaluation)
 		{
-			var a = currentGeneration > 10000;
+			var a = currentGeneration > 1000;
 			var b = population.MaximumFitness == 1;
 
 			return (a || b);
