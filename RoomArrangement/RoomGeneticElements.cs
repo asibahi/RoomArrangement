@@ -42,115 +42,21 @@ namespace RoomArrangement
 				Database.List[j].Adjust(x, y, o);
 			}
 
-			// Evaluate fitness for every couple so it is a fraction of 1 (1 being perfectly adjacent)
-			// then add the individual fitness value to fitnessList
-			//
-			// So each fitness value is	1 / (1 + fValue)
-			// Which becomes smaller the large fValue is. But if fValue == 0 then it becomes 1.
+			// Actual Evaluation
 
+			double rec1X, rec1Y, cnt1X, cnt1Y;
+			double rec2X, rec2Y, cnt2X, cnt2Y;
 
-			// Related rooms logic
 			for (int i = 0; i < Database.Count; i++)
 			{
-				// Using double because all the numbers will factor into fValue, which has to be a double.
-				var r1 = Database.List[i];
-				double rec1X = r1.Space.XDimension;
-				double rec1Y = r1.Space.YDimension;
-				double cnt1X = r1.Center.X;
-				double cnt1Y = r1.Center.Y;
-
-				for (int j = 0; j < r1.AdjacentRooms.Count; j++)
-				{
-
-					double fValue = -1;
-
-					var r2 = r1.AdjacentRooms[j];
-					double rec2X = r2.Space.XDimension;
-					double rec2Y = r2.Space.YDimension;
-					double cnt2X = r2.Center.X;
-					double cnt2Y = r2.Center.Y;
-
-					var xDistance = Abs(cnt1X - cnt2X);
-					var yDistance = Abs(cnt1Y - cnt2Y);
-
-					var xSize = (rec1X / 2) + (rec2X / 2);
-					var ySize = (rec1Y / 2) + (rec2Y / 2);
-
-					if (xDistance > xSize)
-					{
-						fValue = 1 - ((xDistance - xSize) / xDistance);
-						fitnessList.Add(fValue);
-					}
-					else if (xDistance == xSize)
-					{
-						fitnessList.Add(1);
-					}
-
-					if (yDistance > ySize)
-					{
-						fValue = 1 - ((yDistance - ySize) / yDistance);
-						fitnessList.Add(fValue);
-					}
-					else if (yDistance == ySize)
-					{
-						fValue = 1;
-						fitnessList.Add(fValue);
-					}
-
-					Console.WriteLine("{0}, {1} Adjacency: {2}", r1.Name, r2.Name, fValue != -1 ? fValue.ToString() : "N/A");
-
-				}
-			}
-
-			// Intersection Logic
-			for (int i = 0; i < Database.Count; i++)
-			{
-				// Using double because all the numbers will factor into fValue, which is a double.
-				var r1 = Database.List[i];
-				double rec1X = r1.Space.XDimension;
-				double rec1Y = r1.Space.YDimension;
-				double cnt1X = r1.Center.X;
-				double cnt1Y = r1.Center.Y;
+				ReadRoom(i, out rec1X, out rec1Y, out cnt1X, out cnt1Y);
 
 				for (int j = 0; j < Database.Count; j++)
 				{
-
-					if (j != i)
-					{
-						double fValue = -1;
-
-						var r2 = Database.List[j];
-						double rec2X = r2.Space.XDimension;
-						double rec2Y = r2.Space.YDimension;
-						double cnt2X = r2.Center.X;
-						double cnt2Y = r2.Center.Y;
-
-						var xDistance = Abs(cnt1X - cnt2X);
-						var yDistance = Abs(cnt1Y - cnt2Y);
-
-						var xSize = (rec1X / 2) + (rec2X / 2);
-						var ySize = (rec1Y / 2) + (rec2Y / 2);
-
-						if (xDistance < xSize && yDistance < ySize)
-						{
-							var x = 1 - ((xSize - xDistance) / xSize);
-							var y = 1 - ((ySize - yDistance) / ySize);
-
-							// fValue = x < y ? x : y;
-							fValue = x * y;
-							// fValue = (x + y) / 2;
-							fitnessList.Add(fValue);
-						}
-						else
-						{
-							fValue = 1;
-							fitnessList.Add(fValue);
-						}
-
-						Console.WriteLine("{0}, {1} Intersection: {2}", r1.Name, r2.Name, fValue != -1 ? fValue.ToString() : "N/A");
-					}
+					ReadRoom(j, out rec2X, out rec2Y, out cnt2X, out cnt2Y);
 				}
 			}
+
 
 			fitnessList.Add(1d);
 			//return fitnessList.Average();
@@ -158,15 +64,64 @@ namespace RoomArrangement
 			double fitness = 1;
 			foreach (double d in fitnessList)
 				fitness *= d;
-			return fitness; 
+			return fitness;
 		}
 
-		public static bool Terminate(Population population, int currentGeneration, long currentEvaluation)
+		public static bool Terminate(Population population,
+						int currentGeneration,
+						long currentEvaluation)
 		{
 			var a = currentGeneration > 1000;
 			var b = population.MaximumFitness == 1;
 
 			return (a || b);
+		}
+
+		private static void ReadRoom(int i,
+						out double recX,
+						out double recY,
+						out double cntX,
+						out double cntY)
+		{
+			var r = Database.List[i];
+			recX = r.Space.XDimension;
+			recY = r.Space.YDimension;
+			cntX = r.Center.X;
+			cntY = r.Center.Y;
+		}
+
+		// I am still not sure what I should have this method return
+		// It should compare whether two rooms intersect and if they are related, how far they are.
+		private static double CompareRooms(int i, int j)
+		{
+			double returnVal = -1;
+			if (i != j)
+			{
+				double xRec1, yRec1, xCnt1, yCnt1;
+				double xRec2, yRec2, xCnt2, yCnt2;
+
+				var ri = Database.List[i];
+				var rj = Database.List[j];
+
+				ReadRoom(i, out xRec1, out yRec1, out xCnt1, out yCnt1);
+				ReadRoom(j, out xRec2, out yRec2, out xCnt2, out yCnt2);
+
+				double xDis = Abs(xCnt1 - xCnt2);
+				double yDis = Abs(yCnt1 - yCnt2);
+				double xSize = (xRec1 / 2) + (xRec2 / 2);
+				double ySixe = (yRec1 / 2) + (yRec2 / 2);
+
+				// Intersection logic
+				if (xSize > xDis && ySixe > yDis)
+				{
+					
+				}
+
+				if (ri.AdjacentRooms.Contains(rj))
+				{
+				}
+			}
+			return returnVal;
 		}
 	}
 }
