@@ -131,14 +131,7 @@ namespace RoomArrangement
 				}
 			}
 
-
-			double fitness = 1;
-			foreach (double d in fitnessList)
-				fitness *= d;
-
-			/test
-
-			return fitness;
+			return fitnessList.Average();
 		}
 
 		public static bool Terminate(Population population, int currentGeneration, long currentEvaluation)
