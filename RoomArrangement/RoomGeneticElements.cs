@@ -8,7 +8,7 @@ using GAF;
 
 namespace RoomArrangement
 {
-	static class RoomGeneticElements
+	static class GACompanions
 	{
 		public static double CalculateFitness(Chromosome c)
 		{
@@ -39,7 +39,7 @@ namespace RoomArrangement
 
 				var j = i / 9;
 
-				RoomDB.List[j].Adjust(x, y, o);
+				Database.List[j].Adjust(x, y, o);
 			}
 
 			// Evaluate fitness for every couple so it is a fraction of 1 (1 being perfectly adjacent)
@@ -50,10 +50,10 @@ namespace RoomArrangement
 
 
 			// Related rooms logic
-			for (int i = 0; i < RoomDB.Count; i++)
+			for (int i = 0; i < Database.Count; i++)
 			{
 				// Using double because all the numbers will factor into fValue, which has to be a double.
-				var r1 = RoomDB.List[i];
+				var r1 = Database.List[i];
 				double rec1X = r1.Space.XDimension;
 				double rec1Y = r1.Space.YDimension;
 				double cnt1X = r1.Center.X;
@@ -91,21 +91,21 @@ namespace RoomArrangement
 			}
 
 			// Intersection Logic
-			for (int i = 0; i < RoomDB.Count; i++)
+			for (int i = 0; i < Database.Count; i++)
 			{
 				// Using double because all the numbers will factor into fValue, which is a double.
-				var r1 = RoomDB.List[i];
+				var r1 = Database.List[i];
 				double rec1X = r1.Space.XDimension;
 				double rec1Y = r1.Space.YDimension;
 				double cnt1X = r1.Center.X;
 				double cnt1Y = r1.Center.Y;
 
-				for (int j = 0; j < RoomDB.Count; j++)
+				for (int j = 0; j < Database.Count; j++)
 				{
 
 					double fValue;
 
-					var r2 = RoomDB.List[j];
+					var r2 = Database.List[j];
 					double rec2X = r2.Space.XDimension;
 					double rec2Y = r2.Space.YDimension;
 					double cnt2X = r2.Center.X;
@@ -141,7 +141,7 @@ namespace RoomArrangement
 
 		public static bool Terminate(Population population, int currentGeneration, long currentEvaluation)
 		{
-			var a = currentGeneration > 1000;
+			var a = currentGeneration > 10000;
 			var b = population.MaximumFitness == 1;
 
 			return (a || b);

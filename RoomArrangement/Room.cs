@@ -50,22 +50,22 @@ namespace RoomArrangement
 			ID = ++Population;
 			Name = string.Format("Room Number {0}", ID);
 
-			Space = new Rectangle();
+			Space = new Rectangle(3,4);
 			Anchor = new Point();
 
-			RoomDB.Add(this);
+			AdjacentRooms = new List<Room>();
+
+			Database.Add(this);
 		}
 
 		// Constuctor
-		public Room(string s, Point pt, Rectangle rec)
+		public Room(string name, Point pt, Rectangle rec)
+			: this ()
 		{
-			ID = ++Population;
-			Name = s;
+			Name = string.Format("Room {0} : {1}", ID, name);
 
 			Space = rec;
 			Anchor = pt;
-
-			RoomDB.Add(this);
 		}
 
 

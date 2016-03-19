@@ -21,7 +21,10 @@ namespace RoomArrangement
 				var r = new Room();
 			}
 
-
+			// This is just to test the code with three numbers
+			Database.PairRooms(0, 1);
+			Database.PairRooms(0, 2);
+			Database.PairRooms(1, 2);
 
 			var population = new Population(100, 9 * NumOfRooms, false, false);
 
@@ -34,17 +37,22 @@ namespace RoomArrangement
 			var mutation = new BinaryMutate(0.08, true);
 
 			//create the GA itself 
-			var ga = new GeneticAlgorithm(population, RoomGeneticElements.CalculateFitness);
-
-			ga.OnRunComplete += ga_OnRunComplete;
+			var ga = new GeneticAlgorithm(population, GACompanions.CalculateFitness);
 
 			//add the operators to the ga process pipeline 
 			ga.Operators.Add(elite);
 			ga.Operators.Add(crossover);
 			ga.Operators.Add(mutation);
 
+			// sunbscribe to Termination
+			ga.OnRunComplete += ga_OnRunComplete;
+
+
 			//run the GA 
-			ga.Run(RoomGeneticElements.Terminate);
+			Console.WriteLine("Starting the GA");
+			ga.Run(GACompanions.Terminate);
+
+
 
 			Console.ReadKey();
 		}
@@ -52,7 +60,28 @@ namespace RoomArrangement
 		// subscribing to the event of Completion
 		static void ga_OnRunComplete(object sender, GaEventArgs e)
 		{
-			var fittest = e.Population.GetTop(1)[0];
+			var c = e.Population.GetTop(1)[0];
+
+			// copying some code from the Evaluate function. Is some refactoring in order?
+
+			for (int i = 0; i < c.Count; i += 9)
+			{
+				int x = Convert.ToInt32(c.ToBinaryString(i, 4), 2);
+				int y = Convert.ToInt32(c.ToBinaryString(i + 4, 4), 2);
+				int oTemp = Convert.ToInt32(c.ToBinaryString(i + 8, 1), 2);
+
+				bool o = Convert.ToBoolean(oTemp);
+
+				var j = i / 9;
+
+				Database.List[j].Adjust(x, y, o);
+			}
+
+			foreach (Room r in Database.List)
+				Console.WriteLine("{0}'s coordinates are {1}. Its dimensions are {2}", r.Name, r.Anchor.ToString(), r.Space.ToString());
+
+			Console.WriteLine("The GA is Done");
+			Console.WriteLine("Fitness is {0}", c.Fitness);
 
 		}
 	}

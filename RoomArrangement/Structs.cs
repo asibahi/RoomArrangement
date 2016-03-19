@@ -47,6 +47,13 @@ namespace RoomArrangement
 			XDimension = r.XDimension;
 			YDimension = r.YDimension;
 		}
+
+		public override string ToString()
+		{
+			string s = "(" + XDimension.ToString() + ", " + YDimension.ToString() + " )";
+			return s;
+		}
+
 	}
 
 
