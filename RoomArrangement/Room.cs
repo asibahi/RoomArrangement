@@ -70,11 +70,6 @@ namespace RoomArrangement
 
 
 		// Methods and stuff
-		public static void PairRooms(Room r1, Room r2)
-		{
-			r1.AdjacentRooms.Add(r2);
-			r2.AdjacentRooms.Add(r1);
-		}
 
 		public void Rotate()
 		{
