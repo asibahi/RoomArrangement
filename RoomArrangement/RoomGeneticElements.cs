@@ -136,6 +136,8 @@ namespace RoomArrangement
 			foreach (double d in fitnessList)
 				fitness *= d;
 
+			/test
+
 			return fitness;
 		}
 
