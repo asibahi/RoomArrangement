@@ -14,7 +14,7 @@ namespace RoomArrangement
 
 		public override string ToString()
 		{
-			string s = "(" + X.ToString() + ", " + Y.ToString() + " )";
+			string s = "(" + X.ToString() + ", " + Y.ToString() + ")";
 			return s;
 		}
 
@@ -50,7 +50,7 @@ namespace RoomArrangement
 
 		public override string ToString()
 		{
-			string s = "(" + XDimension.ToString() + ", " + YDimension.ToString() + " )";
+			string s = "(" + XDimension.ToString() + ", " + YDimension.ToString() + ")";
 			return s;
 		}
 
