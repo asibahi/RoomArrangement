@@ -81,11 +81,19 @@ namespace RoomArrangement
 						fValue = 1 - ((xDistance - xSize) / xDistance);
 						fitnessList.Add(fValue);
 					}
+					else if (xDistance == xSize)
+					{
+						fitnessList.Add(1);
+					}
 
 					if (yDistance > ySize)
 					{
 						fValue = 1 - ((yDistance - ySize) / yDistance);
 						fitnessList.Add(fValue);
+					}
+					else if (yDistance == ySize)
+					{
+						fitnessList.Add(1);
 					}
 
 				}
@@ -104,41 +112,49 @@ namespace RoomArrangement
 				for (int j = 0; j < Database.Count; j++)
 				{
 
-					double fValue;
-
-					var r2 = Database.List[j];
-					double rec2X = r2.Space.XDimension;
-					double rec2Y = r2.Space.YDimension;
-					double cnt2X = r2.Center.X;
-					double cnt2Y = r2.Center.Y;
-
-					var xDistance = Abs(cnt1X - cnt2X);
-					var yDistance = Abs(cnt1Y - cnt2Y);
-
-					var xSize = (rec1X / 2) + (rec2X / 2);
-					var ySize = (rec1Y / 2) + (rec2Y / 2);
-
-					if (xDistance < xSize && yDistance < ySize)
+					if (j != i)
 					{
-						var x = 1 - ((xSize - xDistance) / xSize);
-						var y = 1 - ((ySize - yDistance) / ySize);
+						double fValue;
 
-						// fValue = x < y ? x : y;
-						fValue = x * y;
-						// fValue = (x + y) / 2;
-						fitnessList.Add(fValue);
+						var r2 = Database.List[j];
+						double rec2X = r2.Space.XDimension;
+						double rec2Y = r2.Space.YDimension;
+						double cnt2X = r2.Center.X;
+						double cnt2Y = r2.Center.Y;
+
+						var xDistance = Abs(cnt1X - cnt2X);
+						var yDistance = Abs(cnt1Y - cnt2Y);
+
+						var xSize = (rec1X / 2) + (rec2X / 2);
+						var ySize = (rec1Y / 2) + (rec2Y / 2);
+
+						if (xDistance < xSize && yDistance < ySize)
+						{
+							var x = 1 - ((xSize - xDistance) / xSize);
+							var y = 1 - ((ySize - yDistance) / ySize);
+
+							// fValue = x < y ? x : y;
+							// fValue = x * y;
+							fValue = (x + y) / 2;
+							fitnessList.Add(fValue);
 
 
-					}
-					else
-					{
-						fitnessList.Add(1);
+						}
+						else
+						{
+							fitnessList.Add(1);
+						}
 					}
 				}
 			}
 
 			fitnessList.Add(1d);
-			return fitnessList.Average();
+			//return fitnessList.Average();
+
+			double fitness = 1;
+			foreach (double d in fitnessList)
+				fitness *= d;
+			return fitness; 
 		}
 
 		public static bool Terminate(Population population, int currentGeneration, long currentEvaluation)

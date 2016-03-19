@@ -30,11 +30,11 @@ namespace RoomArrangement
 
 			//create the genetic operators 
 			var elite = new Elite(5);
-			var crossover = new Crossover(0.8, false)
+			var crossover = new Crossover(0.8, true)
 			{
 				CrossoverType = CrossoverType.SinglePoint
 			};
-			var mutation = new BinaryMutate(0.5, true);
+			var mutation = new BinaryMutate(0.2, true);
 
 			//create the GA itself 
 			var ga = new GeneticAlgorithm(population, GACompanions.CalculateFitness);
