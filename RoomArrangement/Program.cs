@@ -88,7 +88,7 @@ namespace RoomArrangement
 				Console.WriteLine("{0}'s coordinates are {1}. Its dimensions are {2}", r.Name, r.Anchor.ToString(), r.Space.ToString());
 
 			Console.WriteLine("The GA is Done");
-			Console.WriteLine("Fitness is {0}", c.Fitness); 
+			Console.WriteLine("Fitness is {0}", c.Fitness);
 
 
 		}
