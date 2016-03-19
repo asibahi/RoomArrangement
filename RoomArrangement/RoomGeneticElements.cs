@@ -131,7 +131,6 @@ namespace RoomArrangement
 				}
 			}
 
-			// test
 			return fitnessList.Average();
 		}
 
