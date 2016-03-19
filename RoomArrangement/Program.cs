@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using GAF;
 using GAF.Operators;
+using static System.Math;
 
 namespace RoomArrangement
 {
@@ -70,7 +71,6 @@ namespace RoomArrangement
 			var c = e.Population.GetTop(1)[0];
 
 			// copying some code from the Evaluate function. Is some refactoring in order?
-
 			for (int i = 0; i < c.Count; i += 9)
 			{
 				int x = Convert.ToInt32(c.ToBinaryString(i, 4), 2);
@@ -88,7 +88,8 @@ namespace RoomArrangement
 				Console.WriteLine("{0}'s coordinates are {1}. Its dimensions are {2}", r.Name, r.Anchor.ToString(), r.Space.ToString());
 
 			Console.WriteLine("The GA is Done");
-			Console.WriteLine("Fitness is {0}", c.Fitness);
+			Console.WriteLine("Fitness is {0}", c.Fitness); 
+
 
 		}
 	}

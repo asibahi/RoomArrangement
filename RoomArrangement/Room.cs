@@ -48,7 +48,7 @@ namespace RoomArrangement
 		public Room()
 		{
 			ID = ++Population;
-			Name = string.Format("Room Number {0}", ID);
+			Name = string.Format("Room {0}", ID);
 
 			Space = new Rectangle(3,4);
 			Anchor = new Point();

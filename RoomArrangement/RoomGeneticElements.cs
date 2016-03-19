@@ -62,7 +62,7 @@ namespace RoomArrangement
 				for (int j = 0; j < r1.AdjacentRooms.Count; j++)
 				{
 
-					double fValue;
+					double fValue = 0;
 
 					var r2 = r1.AdjacentRooms[j];
 					double rec2X = r2.Space.XDimension;
@@ -93,8 +93,11 @@ namespace RoomArrangement
 					}
 					else if (yDistance == ySize)
 					{
-						fitnessList.Add(1);
+						fValue = 1;
+						fitnessList.Add(fValue);
 					}
+
+					Console.WriteLine("{0}, {1} Adjacency: {2}", r1.Name, r2.Name, fValue != 0 ? fValue.ToString() : "N/A");
 
 				}
 			}
@@ -114,7 +117,7 @@ namespace RoomArrangement
 
 					if (j != i)
 					{
-						double fValue;
+						double fValue = 0;
 
 						var r2 = Database.List[j];
 						double rec2X = r2.Space.XDimension;
@@ -134,16 +137,20 @@ namespace RoomArrangement
 							var y = 1 - ((ySize - yDistance) / ySize);
 
 							// fValue = x < y ? x : y;
-							// fValue = x * y;
-							fValue = (x + y) / 2;
+							fValue = x * y;
+							// fValue = (x + y) / 2;
 							fitnessList.Add(fValue);
 
 
 						}
 						else
 						{
-							fitnessList.Add(1);
+							fValue = 1;
+							fitnessList.Add(fValue);
 						}
+
+						Console.WriteLine("{0}, {1} Intersection: {2}", r1.Name, r2.Name, fValue != 0 ? fValue.ToString() : "N/A");
+
 					}
 				}
 			}
