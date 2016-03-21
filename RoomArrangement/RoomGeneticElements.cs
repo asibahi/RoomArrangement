@@ -47,7 +47,7 @@ namespace RoomArrangement
 
 			for (int i = 0; i < Database.Count; i++)
 			{
-				for (int j = i; j < Database.Count; j++)
+				for (int j = 0; j < Database.Count; j++)
 				{
 					fitnessList.Add(CompareRooms(i, j));
 				}
@@ -55,22 +55,21 @@ namespace RoomArrangement
 
 
 			fitnessList.Add(1d);
-			return fitnessList.Average();
+			// return fitnessList.Average();
 
-			/*double fitness = 1;
+			double fitness = 1;
 			foreach (double d in fitnessList)
 				fitness *= d;
-			return fitness;*/
+			return fitness;
 		}
 
 		public static bool Terminate(Population population,
 						int currentGeneration,
 						long currentEvaluation)
 		{
-			var a = currentGeneration > 1000;
 			var b = population.MaximumFitness == 1;
 
-			return (a || b);
+			return (b);
 		}
 
 		// I am still not sure what I should have this method return
@@ -146,7 +145,7 @@ namespace RoomArrangement
 		{
 			double a = 1;
 			double b = 0;
-			double c = 5;
+			double c = 1;
 
 			return (a * Pow(E, -(Pow((x - b), 2) / (2 * Pow(c, 2)))));
 		}
