@@ -115,7 +115,7 @@ namespace RoomArrangement
 			return fitness;
 		}
 
-		private static void ReadChromosome(Chromosome c)
+		static void ReadChromosome(Chromosome c)
 		{
 			// Assuming each chromosome represents a certain arrangmenet of THREE rooms
 			// The chrome will have, for each room:
