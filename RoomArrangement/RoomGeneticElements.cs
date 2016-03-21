@@ -143,7 +143,7 @@ namespace RoomArrangement
 
 				var j = i / 9;
 
-				RoomDB.List[j].Adjust(x, y, o);
+				Database.List[j].Adjust(x, y, o);
 			}
 		}
 
