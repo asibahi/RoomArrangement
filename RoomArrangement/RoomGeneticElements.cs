@@ -43,6 +43,7 @@ namespace RoomArrangement
                         }
 
                         // Actual Evaluation
+                        // STILL WORK IN PROGRESS
 
                         double rec1X, rec1Y, cnt1X, cnt1Y;
                         double rec2X, rec2Y, cnt2X, cnt2Y;
