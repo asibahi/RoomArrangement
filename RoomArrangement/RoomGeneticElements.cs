@@ -8,7 +8,7 @@ using GAF;
 
 namespace RoomArrangement
 {
-	static class GeneticItems
+	static class GACompanions
 	{
 		public static double CalculateFitness(Chromosome c)
 		{
@@ -24,10 +24,10 @@ namespace RoomArrangement
 
 
 			// Related rooms logic
-			for (int i = 0; i < RoomDB.Count; i++)
+			for (int i = 0; i < Database.Count; i++)
 			{
-				// Using double because all the numbers will factor into fValue, which is a double.
-				var r1 = RoomDB.List[i];
+				// Using double because all the numbers will factor into fValue, which has to be a double.
+				var r1 = Database.List[i];
 				double rec1X = r1.Space.XDimension;
 				double rec1Y = r1.Space.YDimension;
 				double cnt1X = r1.Center.X;
@@ -52,36 +52,34 @@ namespace RoomArrangement
 
 					if (xDistance >= xSize)
 					{
-						var fitnessFactor = xDistance - xSize;
-						fValue = 1 / (1 + fitnessFactor);
+						fValue = 1 / (1 + (xDistance - xSize));
 						fitnessList.Add(fValue);
 					}
 
 					if (yDistance >= ySize)
 					{
-						var fitnessFactor = yDistance - ySize;
-						fValue = 1 / (1 + fitnessFactor);
+						fValue = 1 / (1 + (yDistance - ySize));
 						fitnessList.Add(fValue);
 					}
 				}
 			}
 
 			// Intersection Logic
-			for (int i = 0; i < RoomDB.Count; i++)
+			for (int i = 0; i < Database.Count; i++)
 			{
 				// Using double because all the numbers will factor into fValue, which is a double.
-				var r1 = RoomDB.List[i];
+				var r1 = Database.List[i];
 				double rec1X = r1.Space.XDimension;
 				double rec1Y = r1.Space.YDimension;
 				double cnt1X = r1.Center.X;
 				double cnt1Y = r1.Center.Y;
 
-				for (int j = 0; j < RoomDB.Count; j++)
+				for (int j = 0; j < Database.Count; j++)
 				{
 
 					double fValue;
 
-					var r2 = RoomDB.List[j];
+					var r2 = Database.List[j];
 					double rec2X = r2.Space.XDimension;
 					double rec2Y = r2.Space.YDimension;
 					double cnt2X = r2.Center.X;
@@ -107,12 +105,15 @@ namespace RoomArrangement
 				}
 			}
 
+			return fitnessList.Average();
+		}
 
-			double fitness = 1;
-			foreach (double d in fitnessList)
-				fitness *= d;
+		public static bool Terminate(Population population, int currentGeneration, long currentEvaluation)
+		{
+			var a = currentGeneration > 10000;
+			var b = population.MaximumFitness == 1;
 
-			return fitness;
+			return (a || b);
 		}
 
 		static void ReadChromosome(Chromosome c)

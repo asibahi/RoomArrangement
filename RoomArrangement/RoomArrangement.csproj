@@ -49,7 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="GeneticItems.cs" />
+    <Compile Include="RoomGeneticElements.cs" />
     <Compile Include="RoomDB.cs" />
     <Compile Include="Structs.cs" />
     <Compile Include="Room.cs" />
