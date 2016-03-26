@@ -48,43 +48,25 @@ namespace RoomArrangement
 
 		public static int Count => List.Count;
 
-		public static void Add(Room item)
-		{
-			list.Add(item);
-			// Should it check for duplicates?
-		}
+		public static void Add(Room item) => list.Add(item);
+		// Should it check for duplicates?
 
-		public static void Clear()
-		{
-			list.Clear();
-		}
+		public static void Clear() => list.Clear();
 
-		public static bool Contains(Room item)
-		{
-			// This needs to be rewritten to check for Room ID's instead of the Room ref
-			return list.Contains(item);
-		}
+		public static bool Contains(Room item) => list.Contains(item);
+		// This needs to be rewritten to check for Room ID's instead of the Room ref
 
-		public static void CopyTo(Room[] array, int arrayIndex)
-		{
-			list.CopyTo(array, arrayIndex);
-		}
+		public static void CopyTo(Room[] array, int arrayIndex) => list.CopyTo(array, arrayIndex);
 
 		public static IEnumerator<Room> GetEnumerator() => list.GetEnumerator();
 
 		public static int IndexOf(Room item) => list.IndexOf(item); // See comment on Contains()
 
-		public static void Insert(int index, Room item)
-		{
-			list.Insert(index, item);
-		}
+		public static void Insert(int index, Room item) => list.Insert(index, item);
 
 		public static bool Remove(Room item) => list.Remove(item);
 
-		public static void RemoveAt(int index)
-		{
-			list.RemoveAt(index);
-		}
+		public static void RemoveAt(int index) => list.RemoveAt(index);
 		#endregion
 
 		// Methods for the Database.
@@ -106,12 +88,7 @@ namespace RoomArrangement
 			Console.WriteLine("Rooms {0} and {1} are paired", r1.Name, r2.Name);
 		}
 
-		public static void PairRooms(int i, int j)
-		{
-			var r1 = Database.List[i];
-			var r2 = Database.List[j];
-			PairRooms(r1, r2);
-		}
+		public static void PairRooms(int i, int j) => PairRooms(Database.List[i], Database.List[j]);
 
 		public static List<Room> GetAdjacentRooms(Room room)
 		{

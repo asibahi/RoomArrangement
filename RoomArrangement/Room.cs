@@ -57,10 +57,7 @@ namespace RoomArrangement
 
 		// Methods and stuff
 
-		public void Rotate()
-		{
-			Space = new Rectangle(Space.YDimension, Space.XDimension);
-		}
+		public void Rotate() =>	Space = new Rectangle(Space.YDimension, Space.XDimension);
 
 		public void Adjust(int x, int y, bool YOrientation)
 		{
@@ -69,7 +66,6 @@ namespace RoomArrangement
 
 			// Setting the new Orientation
 			// 0 is X, 1 is Y. Feels better this way, but doesn't really matter.
-
 			char tempChar = YOrientation ? 'Y' : 'X';
 
 			if (Orientation != 'O' && tempChar != Orientation)

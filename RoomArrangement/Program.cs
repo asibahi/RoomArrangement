@@ -20,8 +20,9 @@ namespace RoomArrangement
 			{
 				var r = new Room();
 			}
+			
 
-			// This is just to test the code with three numbers
+			// This is just to test the code with three rooms
 			Database.PairRooms(0, 1);
 			Database.PairRooms(0, 2);
 			Database.PairRooms(1, 2);
