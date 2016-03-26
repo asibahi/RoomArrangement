@@ -10,23 +10,15 @@ namespace RoomArrangement
 	{
 
 		// Meta properties
-		public int ID { get; private set; }
+		private readonly int id;
+		public int ID => id;
 
-		private string name;
-		public string Name
-		{
-			get
-			{
-				return string.Format(
+		private readonly string name;
+		public string Name => string.Format(
 					string.IsNullOrEmpty(name)
 					? "Room {1}"
 					: "Room {1} : {0}", name, ID);
-			}
-			private set
-			{
-				name = value;
-			}
-		}
+
 		private static int Population { get; set; }
 
 		// Geometric properties
@@ -58,15 +50,15 @@ namespace RoomArrangement
 
 		// Empty Constructor
 		public Room()
-			:this(null,new Point(), new Rectangle(3,4))
+			: this(null, new Point(), new Rectangle(3, 4))
 		{
 		}
 
 		// Constuctor
 		public Room(string n, Point pt, Rectangle rec)
 		{
-			ID = ++Population;
-			Name = n;
+			id = ++Population;
+			name = n;
 
 			Space = rec;
 			Anchor = pt;
