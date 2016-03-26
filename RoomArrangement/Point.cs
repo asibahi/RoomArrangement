@@ -18,10 +18,6 @@
 			Y = p.Y;
 		}
 
-		public override string ToString()
-		{
-			string s = "(" + X.ToString() + ", " + Y.ToString() + ")";
-			return s;
-		}
+		public override string ToString() => "(" + X.ToString() + ", " + Y.ToString() + ")";
 	}
 }

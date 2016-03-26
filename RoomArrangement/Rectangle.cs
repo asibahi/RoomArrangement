@@ -18,10 +18,6 @@
 			YDimension = r.YDimension;
 		}
 
-		public override string ToString()
-		{
-			string s = "(" + XDimension.ToString() + ", " + YDimension.ToString() + ")";
-			return s;
-		}
+		public override string ToString() => "(" + XDimension.ToString() + ", " + YDimension.ToString() + ")";
 	}
 }

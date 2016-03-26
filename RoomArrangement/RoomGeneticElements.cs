@@ -39,10 +39,8 @@ namespace RoomArrangement
 
 		public static bool Terminate(Population population,
 						int currentGeneration,
-						long currentEvaluation)
-		{
-			return (population.MaximumFitness == 1);
-		}
+						long currentEvaluation) => (population.MaximumFitness == 1);
+		
 
 		// I am still not sure what I should have this method return
 		// It should compare whether two rooms intersect and if they are related, how far they are.

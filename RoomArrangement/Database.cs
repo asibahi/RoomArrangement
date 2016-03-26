@@ -6,22 +6,20 @@ namespace RoomArrangement
 	static class Database
 	{
 		// Fields
-		public static List<Room> List { get; private set; }
-		public static List<Tuple<Room, Room>> Adjacacencies
-		{
-			// Each Tuple is a pair of rooms. Still unsure 
-			// about this and how it would handle duplicates.
-			// Would it be better to have the Tuples store IDs instead?
-			//
-			get;
-			private set;
-		}
+		private static readonly List<Room> list;
+		public static List<Room> List => list;
+
+		private static readonly List<Tuple<Room, Room>> adjacencies;
+		public static List<Tuple<Room, Room>> Adjacencies => adjacencies;
+		// Each Tuple is a pair of rooms. Still unsure 
+		// about this and how it would handle duplicates.
+		// Would it be better to have the Tuples store IDs instead?
 
 		// Constructor
 		static Database()
 		{
-			List = new List<Room>();
-			Adjacacencies = new List<Tuple<Room, Room>>();
+			list = new List<Room>();
+			adjacencies = new List<Tuple<Room, Room>>();
 		}
 
 		#region Following Default IList implementation. See comments and Todo inside.
@@ -48,57 +46,44 @@ namespace RoomArrangement
 		// Todo : Revise Contains() and IndexOf() to check for ID instead.
 
 
-		public static int Count
-		{
-			get { return List.Count; }
-		}
+		public static int Count => List.Count;
 
 		public static void Add(Room item)
 		{
-			List.Add(item);
+			list.Add(item);
 			// Should it check for duplicates?
 		}
 
 		public static void Clear()
 		{
-			List.Clear();
+			list.Clear();
 		}
 
 		public static bool Contains(Room item)
 		{
 			// This needs to be rewritten to check for Room ID's instead of the Room ref
-			return List.Contains(item);
+			return list.Contains(item);
 		}
 
 		public static void CopyTo(Room[] array, int arrayIndex)
 		{
-			List.CopyTo(array, arrayIndex);
+			list.CopyTo(array, arrayIndex);
 		}
 
-		public static IEnumerator<Room> GetEnumerator()
-		{
-			return List.GetEnumerator();
-		}
+		public static IEnumerator<Room> GetEnumerator() => list.GetEnumerator();
 
-		public static int IndexOf(Room item)
-		{
-			// See comment on Contains()
-			return List.IndexOf(item);
-		}
+		public static int IndexOf(Room item) => list.IndexOf(item); // See comment on Contains()
 
 		public static void Insert(int index, Room item)
 		{
-			List.Insert(index, item);
+			list.Insert(index, item);
 		}
 
-		public static bool Remove(Room item)
-		{
-			return List.Remove(item);
-		}
+		public static bool Remove(Room item) => list.Remove(item);
 
 		public static void RemoveAt(int index)
 		{
-			List.RemoveAt(index);
+			list.RemoveAt(index);
 		}
 		#endregion
 
@@ -109,17 +94,18 @@ namespace RoomArrangement
 			if (r1.ID == r2.ID)
 				throw new Exception("Cannot pair a room with itself.");
 
-			foreach (var pair in Adjacacencies)
+			foreach (var pair in Adjacencies)
 			{
 				if ((r1.ID == pair.Item1.ID && r2.ID == pair.Item2.ID)
 				    || (r1.ID == pair.Item2.ID && r2.ID == pair.Item1.ID))
 					throw new Exception("Pair already paired.");
 			}
 
-			var adjacentRooms = new Tuple<Room, Room>(r1, r2);
-			Adjacacencies.Add(adjacentRooms);
+			var adjacentRooms = r1.ID < r2.ID ? Tuple.Create(r1, r2) : Tuple.Create(r2, r1);
+			adjacencies.Add(adjacentRooms);
 			Console.WriteLine("Rooms {0} and {1} are paired", r1.Name, r2.Name);
 		}
+
 		public static void PairRooms(int i, int j)
 		{
 			var r1 = Database.List[i];
@@ -130,7 +116,7 @@ namespace RoomArrangement
 		public static List<Room> GetAdjacentRooms(Room room)
 		{
 			var rooms = new List<Room>();
-			foreach (var pair in Adjacacencies)
+			foreach (var pair in adjacencies)
 			{
 				if (pair.Item1.ID == room.ID)
 					rooms.Add(pair.Item2);
@@ -142,7 +128,7 @@ namespace RoomArrangement
 
 		public static bool AreAdjacent(Room r1, Room r2)
 		{
-			foreach (var pair in Adjacacencies)
+			foreach (var pair in adjacencies)
 			{
 				if ((r1.ID == pair.Item1.ID && r2.ID == pair.Item2.ID)
 				    || (r1.ID == pair.Item2.ID && r2.ID == pair.Item1.ID))

@@ -25,18 +25,7 @@ namespace RoomArrangement
 		// Note the Anchor here is supposed to be the SW Corner.
 		public Rectangle Space { get; set; }
 		public Point Anchor { get; set; }
-		public char Orientation
-		{
-			get
-			{
-				if (Space.XDimension > Space.YDimension)
-					return 'X';
-				else if (Space.XDimension < Space.YDimension)
-					return 'Y';
-				else
-					return 'O';
-			}
-		}
+		public char Orientation => Space.XDimension == Space.YDimension ? 'O' : (Space.XDimension > Space.YDimension ? 'X' : 'Y');
 		public Point Center
 		{
 			get
@@ -65,7 +54,6 @@ namespace RoomArrangement
 
 			Database.Add(this);
 		}
-
 
 		// Methods and stuff
 
