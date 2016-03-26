@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using GAF;
 using GAF.Operators;
+using static System.Math;
 
 namespace RoomArrangement
 {
@@ -12,7 +13,6 @@ namespace RoomArrangement
 	{
 		static void Main(string[] args)
 		{
-
 			// Create the Rooms
 			var NumOfRooms = 3;
 
@@ -46,15 +46,19 @@ namespace RoomArrangement
 
 			// sunbscribe to Termination
 			ga.OnRunComplete += ga_OnRunComplete;
-
+			ga.OnGenerationComplete += ga_OnGenerationComplete;
 
 			//run the GA 
 			Console.WriteLine("Starting the GA");
 			ga.Run(GACompanions.Terminate);
 
-
-
 			Console.ReadKey();
+		}
+
+		private static void ga_OnGenerationComplete(object sender, GaEventArgs e)
+		{
+			var c = e.Population.GetTop(1)[0];
+			Console.WriteLine("Fitness is {0}", c.Fitness);
 		}
 
 		// subscribing to the event of Completion
@@ -63,7 +67,6 @@ namespace RoomArrangement
 			var c = e.Population.GetTop(1)[0];
 
 			// copying some code from the Evaluate function. Is some refactoring in order?
-
 			for (int i = 0; i < c.Count; i += 9)
 			{
 				int x = Convert.ToInt32(c.ToBinaryString(i, 4), 2);
@@ -83,6 +86,63 @@ namespace RoomArrangement
 			Console.WriteLine("The GA is Done");
 			Console.WriteLine("Fitness is {0}", c.Fitness);
 
+			DrawSolution();
+		}
+
+
+		// Needs rework
+		private static void DrawSolution()
+		{
+			var rooms = new Dictionary<Point, Rectangle>();
+
+			foreach (Room r in Database.List)
+			{
+				rooms.Add(r.Anchor, r.Space);
+			}
+
+			var roomCounter = 0;
+			var recXStart = 21;
+			var inRectangle = false;
+			var recXCount = 0;
+			var currentRec = new Rectangle();
+			var currentPnt = new Point();
+
+			// Y loop
+			for (int y = 0; y < 20; y++)
+			{
+				// X loop
+				for (int x = 0; x < 20; x++)
+				{
+					var testPt = new Point(x, y);
+					if (rooms.ContainsKey(testPt))
+					{
+						inRectangle = true;
+						roomCounter++;
+						recXStart = x;
+						currentRec = rooms[testPt];
+						currentPnt = testPt;
+					}
+
+					if (recXStart == x)
+						inRectangle = true;
+
+					if (inRectangle)
+					{
+						Console.Write("|_");
+						recXCount++;
+						if (recXCount >= currentRec.XDimension)
+						{
+							inRectangle = false;
+						}
+					}
+					else
+					{
+						Console.Write(". ");
+						recXCount = 0;
+					}
+				}
+				Console.Write("\n");
+			}
 		}
 	}
 }

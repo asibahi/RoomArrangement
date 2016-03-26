@@ -11,7 +11,22 @@ namespace RoomArrangement
 
 		// Meta properties
 		public int ID { get; private set; }
-		public string Name { get; private set; }
+
+		private string name;
+		public string Name
+		{
+			get
+			{
+				return string.Format(
+					string.IsNullOrEmpty(name)
+					? "Room {1}"
+					: "Room {1} : {0}", name, ID);
+			}
+			private set
+			{
+				name = value;
+			}
+		}
 		private static int Population { get; set; }
 
 		// Geometric properties
@@ -41,31 +56,22 @@ namespace RoomArrangement
 			}
 		}
 
-		// Relational properties
-		public List<Room> AdjacentRooms { get; private set; }
-
 		// Empty Constructor
 		public Room()
+			:this(null,new Point(), new Rectangle(3,4))
 		{
-			ID = ++Population;
-			Name = string.Format("Room Number {0}", ID);
-
-			Space = new Rectangle(3,4);
-			Anchor = new Point();
-
-			AdjacentRooms = new List<Room>();
-
-			Database.Add(this);
 		}
 
 		// Constuctor
-		public Room(string name, Point pt, Rectangle rec)
-			: this ()
+		public Room(string n, Point pt, Rectangle rec)
 		{
-			Name = string.Format("Room {0} : {1}", ID, name);
+			ID = ++Population;
+			Name = n;
 
 			Space = rec;
 			Anchor = pt;
+
+			Database.Add(this);
 		}
 
 
@@ -73,15 +79,13 @@ namespace RoomArrangement
 
 		public void Rotate()
 		{
-			var tempRec = new Rectangle(Space.YDimension, Space.XDimension);
-			Space = tempRec;
+			Space = new Rectangle(Space.YDimension, Space.XDimension);
 		}
 
 		public void Adjust(int x, int y, bool YOrientation)
 		{
 			// Setting the new Anchor
-			var tempPt = new Point(x, y);
-			Anchor = tempPt;
+			Anchor = new Point(x, y);
 
 			// Setting the new Orientation
 			// 0 is X, 1 is Y. Feels better this way, but doesn't really matter.
