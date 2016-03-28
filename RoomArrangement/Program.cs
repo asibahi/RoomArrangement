@@ -10,7 +10,7 @@ namespace RoomArrangement
 			// Create the Rooms
 			var NumOfRooms = 3;
 
-			for (int i = 0; i < NumOfRooms; i++)
+			for(int i = 0; i < NumOfRooms; i++)
 			{
 				var r = new Room();
 			}
@@ -29,11 +29,11 @@ namespace RoomArrangement
 		}
 
 		// Needs rework
-		private static void DrawSolution()
+		static void DrawSolution()
 		{
 			var rooms = new Dictionary<Point, Rectangle>();
 
-			foreach (Room r in Database.List)
+			foreach(Room r in Database.List)
 			{
 				rooms.Add(r.Anchor, r.Space);
 			}
@@ -46,13 +46,13 @@ namespace RoomArrangement
 			var currentPnt = new Point();
 
 			// Y loop
-			for (int y = 0; y < 20; y++)
+			for(int y = 0; y < 20; y++)
 			{
 				// X loop
-				for (int x = 0; x < 20; x++)
+				for(int x = 0; x < 20; x++)
 				{
 					var testPt = new Point(x, y);
-					if (rooms.ContainsKey(testPt))
+					if(rooms.ContainsKey(testPt))
 					{
 						inRectangle = true;
 						roomCounter++;
@@ -61,14 +61,14 @@ namespace RoomArrangement
 						currentPnt = testPt;
 					}
 
-					if (recXStart == x)
+					if(recXStart == x)
 						inRectangle = true;
 
-					if (inRectangle)
+					if(inRectangle)
 					{
 						Console.Write("|_");
 						recXCount++;
-						if (recXCount >= currentRec.XDimension)
+						if(recXCount >= currentRec.XDimension)
 						{
 							inRectangle = false;
 						}

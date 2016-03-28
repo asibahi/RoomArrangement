@@ -46,11 +46,9 @@ namespace RoomArrangement
 			ReadChromosome(c);
 
 			// Actual Evaluation
-			// STILL WORK IN PROGRESS
-
-			for (int i = 0; i < Database.Count; i++)
+			for(int i = 0; i < Database.Count; i++)
 			{
-				for (int j = i; j < Database.Count; j++)
+				for(int j = i; j < Database.Count; j++)
 				{
 					fitnessList.Add(CompareRooms(i, j));
 				}
@@ -61,7 +59,7 @@ namespace RoomArrangement
 			// return fitnessList.Average();
 
 			double fitness = 1;
-			foreach (double d in fitnessList)
+			foreach(double d in fitnessList)
 				fitness *= d;
 			return fitness;
 		}
@@ -71,13 +69,11 @@ namespace RoomArrangement
 						long currentEvaluation)
 						=> (population.MaximumFitness == 1);
 
-
-		// I am still not sure what I should have this method return
 		// It should compare whether two rooms intersect and if they are related, how far they are.
-		private static double CompareRooms(int i, int j)
+		static double CompareRooms(int i, int j)
 		{
 			var returnVal = 1d;
-			if (i != j)
+			if(i != j)
 			{
 				double xRec1, yRec1, xCnt1, yCnt1;
 				double xRec2, yRec2, xCnt2, yCnt2;
@@ -94,15 +90,15 @@ namespace RoomArrangement
 				// Related Rooms logic
 				bool areRoomsRelated = Database.AreAdjacent(ri, rj);
 
-				if (areRoomsRelated)
+				if(areRoomsRelated)
 				{
-					if ((xDim == 0 && yDim < 0) || (xDim < 0 && yDim == 0))
+					if((xDim == 0 && yDim < 0) || (xDim < 0 && yDim == 0))
 						returnVal = 1;
 
-					else if (xDim == 0 && yDim == 0)
+					else if(xDim == 0 && yDim == 0)
 						returnVal = GaussianFunc(1);
 
-					else if ((xDim > 0 && yDim < 0) || (xDim < 0 && yDim > 0))
+					else if((xDim > 0 && yDim < 0) || (xDim < 0 && yDim > 0))
 						returnVal = GaussianFunc(Max(xDim, yDim));
 
 					else
@@ -112,7 +108,7 @@ namespace RoomArrangement
 				else
 				{
 					// Intersection logic
-					if (xDim < 0 && yDim < 0)
+					if(xDim < 0 && yDim < 0)
 						returnVal = GaussianFunc(xDim) * GaussianFunc(yDim);
 
 				}
@@ -120,7 +116,7 @@ namespace RoomArrangement
 			return returnVal;
 		}
 
-		private static void ReadChromosome(Chromosome c)
+		static void ReadChromosome(Chromosome c)
 		{
 			// Assuming each chromosome represents a certain arrangmenet of THREE rooms
 			// The chrome will have, for each room:
@@ -137,7 +133,7 @@ namespace RoomArrangement
 			// Third Room:		110101101
 
 			// Adjusting the Rooms
-			for (int i = 0; i < c.Count; i += 9)
+			for(int i = 0; i < c.Count; i += 9)
 			{
 				int x = Convert.ToInt32(c.ToBinaryString(i, 4), 2);
 				int y = Convert.ToInt32(c.ToBinaryString(i + 4, 4), 2);
@@ -154,11 +150,11 @@ namespace RoomArrangement
 		// Implementing the Gaussian Function (bell curve) when
 		// a (peak)     = 1
 		// b (center)   = 0
-		// c (width)    = 5 because what the hell. It is the only thing that could/should be changed.
+		// c (width)    = 1 because what the hell. It is the only thing that could/should be changed.
 		// Check https://en.wikipedia.org/wiki/Gaussian_function and
 		// http://www.wolframalpha.com/input/?i=f%5Cleft(x%5Cright)+%3D+e%5E%7B-+%7B+%5Cfrac%7B(x)%5E2+%7D%7B+2+*+1%5E2%7D+%7D+%7D
 		// for details
-		private static double GaussianFunc(double x)
+		static double GaussianFunc(double x)
 		{
 			double a = 1;
 			double b = 0;
@@ -168,18 +164,17 @@ namespace RoomArrangement
 		}
 
 		// Events subscription
-		private static void ga_OnGenerationComplete(object sender, GaEventArgs e)
+		static void ga_OnGenerationComplete(object sender, GaEventArgs e)
 		{
 			var c = e.Population.GetTop(1)[0];
 			Console.WriteLine("Fitness is {0}", c.Fitness);
 		}
-		private static void ga_OnRunComplete(object sender, GaEventArgs e)
+		static void ga_OnRunComplete(object sender, GaEventArgs e)
 		{
 			var c = e.Population.GetTop(1)[0];
-
 			ReadChromosome(c);
 
-			foreach (Room r in Database.List)
+			foreach(Room r in Database.List)
 				Console.WriteLine("{0}'s coordinates are {1}. Its dimensions are {2}", r.Name, r.Anchor.ToString(), r.Space.ToString());
 
 			Console.WriteLine("The GA is Done");

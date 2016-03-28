@@ -4,16 +4,16 @@
 	{
 
 		// Meta properties
-		private readonly int id;
+		readonly int id;
 		public int ID => id;
 
-		private readonly string name;
+		readonly string name;
 		public string Name => string.Format(
 					string.IsNullOrEmpty(name)
 					? "Room {1}"
 					: "Room {1} : {0}", name, ID);
 
-		private static int Population { get; set; }
+		static int Population { get; set; }
 
 		// Geometric properties
 		// Note the Anchor here is supposed to be the SW Corner.
@@ -50,11 +50,9 @@
 		}
 
 		// Methods and stuff
-
 		public void Rotate() => Space = new Rectangle(Space.YDimension, Space.XDimension);
 
 		public void Adjust(int x, int y, bool YOrientation) => Adjust(new Point(x, y), YOrientation);
-
 		public void Adjust(Point pt, bool YOrientation)
 		{
 			// Setting the new Anchor
@@ -64,14 +62,11 @@
 			// 0 is X, 1 is Y. Feels better this way, but doesn't really matter.
 			char tempChar = YOrientation ? 'Y' : 'X';
 
-			if (Orientation != 'O' && tempChar != Orientation)
+			if(Orientation != 'O' && tempChar != Orientation)
 				Rotate();
 		}
 
 		public void Move(Vector v) => Anchor += new Point(v.X, v.Y);
-
 		public void Move(int x, int y) => Move(new Vector(x, y));
-
-
 	}
 }
