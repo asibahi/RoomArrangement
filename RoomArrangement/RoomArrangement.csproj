@@ -49,10 +49,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="PushPull.cs" />
-    <Compile Include="Rectangle.cs" />
-    <Compile Include="ThrowAndStick.cs" />
-    <Compile Include="Point.cs" />
+    <Compile Include="Algorithms\PushPull.cs" />
+    <Compile Include="Structs\Rectangle.cs" />
+    <Compile Include="Algorithms\ThrowAndStick.cs" />
+    <Compile Include="Structs\Point.cs" />
     <Compile Include="Room.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
