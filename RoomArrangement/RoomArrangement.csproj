@@ -49,8 +49,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="PushPull.cs" />
     <Compile Include="Rectangle.cs" />
-    <Compile Include="GACompanions.cs" />
+    <Compile Include="ThrowAndStick.cs" />
     <Compile Include="Point.cs" />
     <Compile Include="Room.cs" />
     <Compile Include="Program.cs" />

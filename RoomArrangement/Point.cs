@@ -19,5 +19,17 @@
 		}
 
 		public override string ToString() => "(" + X.ToString() + ", " + Y.ToString() + ")";
+
+		// Addition and subtraction.
+		public static Point operator +(Point p1, Point p2) => new Point(p1.X + p2.X, p1.Y + p2.Y);
+		public static Point operator -(Point p1, Point p2) => new Point(p1.X - p2.X, p1.Y - p2.Y);
+
+		// Equality
+		public static bool operator ==(Point p1, Point p2) => p1.X == p2.X && p1.Y == p2.Y;
+		public static bool operator !=(Point p1, Point p2) => !(p1.X == p2.X && p1.Y == p2.Y);
+
+		// Negation
+		public static Point operator !(Point p) => new Point(0 - p.X, 0 - p.Y);
+
 	}
 }

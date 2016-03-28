@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace RoomArrangement
 {
@@ -19,11 +20,67 @@ namespace RoomArrangement
 			Database.PairRooms(0, 2);
 			Database.PairRooms(1, 2);
 
-			GACompanions.RunGA(NumOfRooms);
+			ThrowAndStick.RunGA(NumOfRooms);
 
+			PushPull.Run();
+
+			DrawSolution();
 			Console.ReadKey();
 		}
 
+		// Needs rework
+		private static void DrawSolution()
+		{
+			var rooms = new Dictionary<Point, Rectangle>();
 
+			foreach (Room r in Database.List)
+			{
+				rooms.Add(r.Anchor, r.Space);
+			}
+
+			var roomCounter = 0;
+			var recXStart = 21;
+			var inRectangle = false;
+			var recXCount = 0;
+			var currentRec = new Rectangle();
+			var currentPnt = new Point();
+
+			// Y loop
+			for (int y = 0; y < 20; y++)
+			{
+				// X loop
+				for (int x = 0; x < 20; x++)
+				{
+					var testPt = new Point(x, y);
+					if (rooms.ContainsKey(testPt))
+					{
+						inRectangle = true;
+						roomCounter++;
+						recXStart = x;
+						currentRec = rooms[testPt];
+						currentPnt = testPt;
+					}
+
+					if (recXStart == x)
+						inRectangle = true;
+
+					if (inRectangle)
+					{
+						Console.Write("|_");
+						recXCount++;
+						if (recXCount >= currentRec.XDimension)
+						{
+							inRectangle = false;
+						}
+					}
+					else
+					{
+						Console.Write(". ");
+						recXCount = 0;
+					}
+				}
+				Console.Write("\n");
+			}
+		}
 	}
 }
