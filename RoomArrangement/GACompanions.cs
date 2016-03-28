@@ -188,7 +188,9 @@ namespace RoomArrangement
 		}
 		private static void ga_OnRunComplete(object sender, GaEventArgs e)
 		{
-			ReadChromosome(e.Population.GetTop(1)[0]);
+
+			var c = e.Population.GetTop(1)[0];
+			ReadChromosome(c);
 
 			foreach (Room r in Database.List)
 				Console.WriteLine("{0}'s coordinates are {1}. Its dimensions are {2}", r.Name, r.Anchor.ToString(), r.Space.ToString());
