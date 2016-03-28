@@ -20,7 +20,7 @@ namespace RoomArrangement
 			Database.PairRooms(0, 2);
 			Database.PairRooms(1, 2);
 
-			ThrowAndStick.RunGA(NumOfRooms);
+			ThrowAndStick.Run(NumOfRooms);
 
 			PushPull.Run();
 

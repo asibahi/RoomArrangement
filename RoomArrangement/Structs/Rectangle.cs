@@ -18,6 +18,9 @@
 			YDimension = r.YDimension;
 		}
 
+		public int Area => XDimension * YDimension;
+		public int Circumfrance => 2 * XDimension + 2 * YDimension;
+
 		public override string ToString() => "(" + XDimension.ToString() + ", " + YDimension.ToString() + ")";
 	}
 }
