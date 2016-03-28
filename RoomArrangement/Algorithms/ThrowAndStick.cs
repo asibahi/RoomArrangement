@@ -85,8 +85,8 @@ namespace RoomArrangement
 				var ri = Database.List[i];
 				var rj = Database.List[j];
 
-				ReadRoom(i, out xRec1, out yRec1, out xCnt1, out yCnt1);
-				ReadRoom(j, out xRec2, out yRec2, out xCnt2, out yCnt2);
+				Database.ReadRoom(i, out xRec1, out yRec1, out xCnt1, out yCnt1);
+				Database.ReadRoom(j, out xRec2, out yRec2, out xCnt2, out yCnt2);
 
 				double xDim = Abs(xCnt1 - xCnt2) - ((xRec1 / 2) + (xRec2 / 2));
 				double yDim = Abs(yCnt1 - yCnt2) - ((yRec1 / 2) + (yRec2 / 2));
@@ -118,20 +118,6 @@ namespace RoomArrangement
 				}
 			}
 			return returnVal;
-		}
-
-		// sy's idea. makes the code "neater".
-		private static void ReadRoom(int i,
-					     out double recX,
-					     out double recY,
-					     out double cntX,
-					     out double cntY)
-		{
-			var r = Database.List[i];
-			recX = r.Space.XDimension;
-			recY = r.Space.YDimension;
-			cntX = r.Center.X;
-			cntY = r.Center.Y;
 		}
 
 		private static void ReadChromosome(Chromosome c)

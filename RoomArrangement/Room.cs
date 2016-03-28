@@ -17,8 +17,8 @@
 
 		// Geometric properties
 		// Note the Anchor here is supposed to be the SW Corner.
-		public Rectangle Space { get; set; }
-		public Point Anchor { get; set; }
+		public Rectangle Space { get; private set; }
+		public Point Anchor { get; private set; }
 		public char Orientation => Space.XDimension == Space.YDimension ? 'O' : (Space.XDimension > Space.YDimension ? 'X' : 'Y');
 		public Point Center
 		{
@@ -51,12 +51,14 @@
 
 		// Methods and stuff
 
-		public void Rotate() =>	Space = new Rectangle(Space.YDimension, Space.XDimension);
+		public void Rotate() => Space = new Rectangle(Space.YDimension, Space.XDimension);
 
-		public void Adjust(int x, int y, bool YOrientation)
+		public void Adjust(int x, int y, bool YOrientation) => Adjust(new Point(x, y), YOrientation);
+
+		public void Adjust(Point pt, bool YOrientation)
 		{
 			// Setting the new Anchor
-			Anchor = new Point(x, y);
+			Anchor = pt;
 
 			// Setting the new Orientation
 			// 0 is X, 1 is Y. Feels better this way, but doesn't really matter.
@@ -65,5 +67,11 @@
 			if (Orientation != 'O' && tempChar != Orientation)
 				Rotate();
 		}
+
+		public void Move(Vector v) => Anchor += new Point(v.X, v.Y);
+
+		public void Move(int x, int y) => Move(new Vector(x, y));
+
+
 	}
 }

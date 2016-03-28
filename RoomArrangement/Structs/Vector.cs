@@ -1,16 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace RoomArrangement.Structs
+namespace RoomArrangement
 {
 	// Replicating shit from the Rhino SDK for my purposes
 	struct Vector
 	{
-		public double X { get; set; }
-		public double Y { get; set; }
+		public int X { get; set; }
+		public int Y { get; set; }
 
 		// Might want to use doubles instead of integers so for more precision and stuff
 		// We'll see how that plays out when implementing a Move method.
@@ -53,7 +49,7 @@ namespace RoomArrangement.Structs
 
 		public override bool Equals(object obj) => obj is Vector && this == (Vector)obj;
 		public bool Equals(Vector v) => ((X == v.X) && (Y == v.Y));
-		public override int GetHashCode() => X ^ Y;
+		public override int GetHashCode() => X ^ (13 * Y);
 
 		// Negation
 		public static Vector operator !(Vector v) => new Vector(0 - v.X, 0 - v.Y); 

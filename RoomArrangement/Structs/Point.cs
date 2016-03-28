@@ -31,10 +31,10 @@
 
 		public override bool Equals(object obj) => obj is Point && this == (Point)obj;
 		public bool Equals(Point p) => ((X == p.X) && (Y == p.Y));
-		public override int GetHashCode() => X ^ Y;
+		public override int GetHashCode() => X ^ (7 * Y);
 
 		// Negation
-		public static Point operator !(Point p) => new Point(0 - p.X, 0 - p.Y); 
+		public static Point operator !(Point p) => new Point(0 - p.X, 0 - p.Y);
 		#endregion
 	}
 }

@@ -71,6 +71,20 @@ namespace RoomArrangement
 
 		// Methods for the Database.
 
+		// sy's idea. makes the code "neater".
+		public static void ReadRoom(int i,
+					     out double recX,
+					     out double recY,
+					     out double cntX,
+					     out double cntY)
+		{
+			var r = Database.List[i];
+			recX = r.Space.XDimension;
+			recY = r.Space.YDimension;
+			cntX = r.Center.X;
+			cntY = r.Center.Y;
+		}
+
 		public static void PairRooms(Room r1, Room r2)
 		{
 			if (r1.ID == r2.ID)
