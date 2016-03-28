@@ -1,15 +1,43 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using static System.Math;
 using GAF;
+using GAF.Operators;
 
 namespace RoomArrangement
 {
 	static class GACompanions
 	{
+		public static void RunGA(int NumOfRooms)
+		{
+			var population = new Population(100, 9 * NumOfRooms, false, false);
+
+			//create the genetic operators 
+			var elite = new Elite(5);
+			var crossover = new Crossover(0.85, true)
+			{
+				CrossoverType = CrossoverType.SinglePoint
+			};
+			var mutation = new BinaryMutate(0.08, true);
+
+			//create the GA itself 
+			var ga = new GeneticAlgorithm(population, CalculateFitness);
+
+			//add the operators to the ga process pipeline 
+			ga.Operators.Add(elite);
+			ga.Operators.Add(crossover);
+			ga.Operators.Add(mutation);
+
+			// Events subscription
+			ga.OnRunComplete += ga_OnRunComplete;
+			ga.OnGenerationComplete += ga_OnGenerationComplete;
+
+			// Run the GA 
+			Console.WriteLine("Starting the GA");
+			ga.Run(Terminate);
+
+		}
+
 		public static double CalculateFitness(Chromosome c)
 		{
 			var fitnessList = new List<double>();
@@ -39,8 +67,9 @@ namespace RoomArrangement
 
 		public static bool Terminate(Population population,
 						int currentGeneration,
-						long currentEvaluation) => (population.MaximumFitness == 1);
-		
+						long currentEvaluation)
+						=> (population.MaximumFitness == 1);
+
 
 		// I am still not sure what I should have this method return
 		// It should compare whether two rooms intersect and if they are related, how far they are.
@@ -104,8 +133,7 @@ namespace RoomArrangement
 			cntY = r.Center.Y;
 		}
 
-
-		static void ReadChromosome(Chromosome c)
+		private static void ReadChromosome(Chromosome c)
 		{
 			// Assuming each chromosome represents a certain arrangmenet of THREE rooms
 			// The chrome will have, for each room:
@@ -150,6 +178,81 @@ namespace RoomArrangement
 			double c = 1;
 
 			return (a * Pow(E, -(Pow((x - b), 2) / (2 * Pow(c, 2)))));
+		}
+
+		// Events subscription
+		private static void ga_OnGenerationComplete(object sender, GaEventArgs e)
+		{
+			var c = e.Population.GetTop(1)[0];
+			Console.WriteLine("Fitness is {0}", c.Fitness);
+		}
+		private static void ga_OnRunComplete(object sender, GaEventArgs e)
+		{
+			ReadChromosome(e.Population.GetTop(1)[0]);
+
+			foreach (Room r in Database.List)
+				Console.WriteLine("{0}'s coordinates are {1}. Its dimensions are {2}", r.Name, r.Anchor.ToString(), r.Space.ToString());
+
+			Console.WriteLine("The GA is Done");
+			Console.WriteLine("Fitness is {0}", c.Fitness);
+
+			DrawSolution();
+		}
+
+
+		// Needs rework
+		private static void DrawSolution()
+		{
+			var rooms = new Dictionary<Point, Rectangle>();
+
+			foreach (Room r in Database.List)
+			{
+				rooms.Add(r.Anchor, r.Space);
+			}
+
+			var roomCounter = 0;
+			var recXStart = 21;
+			var inRectangle = false;
+			var recXCount = 0;
+			var currentRec = new Rectangle();
+			var currentPnt = new Point();
+
+			// Y loop
+			for (int y = 0; y < 20; y++)
+			{
+				// X loop
+				for (int x = 0; x < 20; x++)
+				{
+					var testPt = new Point(x, y);
+					if (rooms.ContainsKey(testPt))
+					{
+						inRectangle = true;
+						roomCounter++;
+						recXStart = x;
+						currentRec = rooms[testPt];
+						currentPnt = testPt;
+					}
+
+					if (recXStart == x)
+						inRectangle = true;
+
+					if (inRectangle)
+					{
+						Console.Write("|_");
+						recXCount++;
+						if (recXCount >= currentRec.XDimension)
+						{
+							inRectangle = false;
+						}
+					}
+					else
+					{
+						Console.Write(". ");
+						recXCount = 0;
+					}
+				}
+				Console.Write("\n");
+			}
 		}
 	}
 }

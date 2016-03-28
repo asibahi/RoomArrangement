@@ -50,7 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Rectangle.cs" />
-    <Compile Include="RoomGeneticElements.cs" />
+    <Compile Include="GACompanions.cs" />
     <Compile Include="Point.cs" />
     <Compile Include="Room.cs" />
     <Compile Include="Program.cs" />
