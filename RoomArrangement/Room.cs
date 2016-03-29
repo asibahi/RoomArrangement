@@ -6,6 +6,7 @@
 		// Meta properties
 		readonly int id;
 		public int ID => id;
+		public int Index => id - 1;
 
 		readonly string name;
 		public string Name => string.Format(
