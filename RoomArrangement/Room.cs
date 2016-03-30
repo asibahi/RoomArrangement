@@ -67,7 +67,7 @@
 				Rotate();
 		}
 
-		public void Move(Vector v) => Anchor += new Point(v.X, v.Y);
+		public void Move(Vector v) => Anchor += new Point((int)v.X, (int)v.Y);
 		public void Move(int x, int y) => Move(new Vector(x, y));
 	}
 }

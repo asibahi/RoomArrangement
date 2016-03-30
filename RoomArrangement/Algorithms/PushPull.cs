@@ -12,13 +12,10 @@ namespace RoomArrangement
 			var hardCount = 0;
 			var softCount = 0;
 			var softLim = Database.Count * (Database.Count - 1);
-			var loopCount = 0;
 			var hardLim = 50000;
 
 			do
 			{
-				loopCount++;
-
 				#region PULL ALGORITHM
 				// VERBAL ALGORITHM:
 				// Go through every Adjacency Tuple. Pull the second room towards the first.
@@ -157,7 +154,7 @@ namespace RoomArrangement
 				if(++hardCount > hardLim)
 					break;
 			}
-			while(softCount<=softLim);
+			while(softCount <= softLim);
 		}
 	}
 }
