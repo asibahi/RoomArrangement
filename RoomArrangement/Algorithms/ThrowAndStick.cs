@@ -59,13 +59,13 @@ namespace RoomArrangement
 			// Check for Boundary compliance
 			foreach(Room r in Database.List)
 			{
-				var xFarthest = (r.Anchor.X + r.Space.XDimension - Database.Boundary.XDimension);
+				var xFarthest = r.Anchor.X + r.Space.XDimension - Database.Boundary.XDimension;
 				if(xFarthest > 0)
 					fitnessList.Add(Pow(GaussianFunc(xFarthest), 2));
 				else
 					fitnessList.Add(1d);
 
-				var yFarthest = (r.Anchor.Y + r.Space.YDimension - Database.Boundary.YDimension);
+				var yFarthest = r.Anchor.Y + r.Space.YDimension - Database.Boundary.YDimension;
 				if(yFarthest > 0)
 					fitnessList.Add(Pow(GaussianFunc(yFarthest), 2));
 				else
