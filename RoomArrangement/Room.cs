@@ -1,4 +1,6 @@
-﻿namespace RoomArrangement
+﻿using static System.Math;
+
+namespace RoomArrangement
 {
 	class Room
 	{
@@ -67,7 +69,7 @@
 				Rotate();
 		}
 
-		public void Move(Vector v) => Anchor += new Point((int)v.X, (int)v.Y);
+		public void Move(Vector v) => Anchor += new Point((int)Ceiling(v.X), (int)Ceiling(v.Y));
 		public void Move(int x, int y) => Move(new Vector(x, y));
 	}
 }

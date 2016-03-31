@@ -108,7 +108,6 @@ namespace RoomArrangement
 						var yOn = 0;
 						var xDir = 1;
 						var yDir = 1;
-
 						var random = new Random().Next();
 
 						if(xCnt2 > xCnt1)
@@ -117,17 +116,11 @@ namespace RoomArrangement
 						if(yCnt2 > yCnt1)
 							yDim = -1;
 
-						if(xDim < yDim)
+						if(xDim < yDim || (xDim == yDim && random % 2 == 0))
 							xOn = 1;
-						else if(yDim < xDim)
-							yOn = 1;
 						else
-						{
-							if(random % 2 == 0)
-								xOn = 1;
-							else
-								yOn = 1;
-						}
+							yOn = 1;
+
 						#endregion
 
 						// The main PUSH function
@@ -151,7 +144,7 @@ namespace RoomArrangement
 				}
 				#endregion
 
-				if(++hardCount > hardLim)
+				if(++hardCount >= hardLim)
 					break;
 			}
 			while(softCount <= softLim);

@@ -20,9 +20,19 @@ namespace RoomArrangement
 			Database.PairRooms(0, 2);
 			Database.PairRooms(1, 2);
 
+			// this is 16 * 4 ft and 24 * 4 ft. Roughly equal to 20 by 30 sqm.
+			// Because my glorious app works on a grid of 4ft.
+			Database.Boundary = new Rectangle(16, 25);
+
 			ThrowAndStick.Run(NumOfRooms);
 
 			PushPull.Run();
+
+			foreach(Room r in Database.List)
+				Console.WriteLine("{0}'s coordinates are {1}. Its dimensions are {2}",
+						r.Name,
+						r.Anchor.ToString(),
+						r.Space.ToString());
 
 			DrawSolution();
 			Console.ReadKey();

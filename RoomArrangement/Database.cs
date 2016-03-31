@@ -15,6 +15,8 @@ namespace RoomArrangement
 		// about this and how it would handle duplicates.
 		// Would it be better to have the Tuples store IDs instead?
 
+		public static Rectangle Boundary { get; set; }
+
 		// Constructor
 		static Database()
 		{

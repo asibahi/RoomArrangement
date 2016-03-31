@@ -6,6 +6,8 @@ using GAF.Operators;
 
 namespace RoomArrangement
 {
+	// The name is short for Throw-Stuff-At-The-Wall-and-See-What-Sticks,
+	// which is what the GA all really does.
 	static class ThrowAndStick
 	{
 		// Using Genetic Algorithms
@@ -52,6 +54,22 @@ namespace RoomArrangement
 				{
 					fitnessList.Add(CompareRooms(i, j));
 				}
+			}
+
+			// Check for Boundary compliance
+			foreach(Room r in Database.List)
+			{
+				var xFarthest = (r.Anchor.X + r.Space.XDimension - Database.Boundary.XDimension);
+				if(xFarthest > 0)
+					fitnessList.Add(Pow(GaussianFunc(xFarthest), 2));
+				else
+					fitnessList.Add(1d);
+
+				var yFarthest = (r.Anchor.Y + r.Space.YDimension - Database.Boundary.YDimension);
+				if(yFarthest > 0)
+					fitnessList.Add(Pow(GaussianFunc(yFarthest), 2));
+				else
+					fitnessList.Add(1d);
 			}
 
 
@@ -173,9 +191,6 @@ namespace RoomArrangement
 		{
 			var c = e.Population.GetTop(1)[0];
 			ReadChromosome(c);
-
-			foreach(Room r in Database.List)
-				Console.WriteLine("{0}'s coordinates are {1}. Its dimensions are {2}", r.Name, r.Anchor.ToString(), r.Space.ToString());
 
 			Console.WriteLine("The GA is Done");
 			Console.WriteLine("Fitness is {0}", c.Fitness);
