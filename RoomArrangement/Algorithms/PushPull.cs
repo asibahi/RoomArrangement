@@ -131,10 +131,40 @@ namespace RoomArrangement
 							var tVx = xDir * xDim * xOn;
 							var tVy = yDir * yDim * yOn;
 
+							#region Out of Bounds test
+							// Positions of ri and rj after moving. To check if they're outside boundary
+							// ri new positions after change
+							var riXMax = ri.Anchor.X + ri.Space.XDimension + tVx / 2;
+							var riXMin = ri.Anchor.X + tVx / 2;
+							var riYMax = ri.Anchor.Y + ri.Space.YDimension + tVy / 2;
+							var riYMin = ri.Anchor.Y + tVy / 2;
+							var riStillIn = (riXMax <= Database.Boundary.XDimension)
+									&& (riXMin >= 0)
+									&& (riYMax <= Database.Boundary.YDimension)
+									&& (riYMax >= 0);
+
+							// rj new positions after change
+							var rjXMax = rj.Anchor.X + rj.Space.XDimension - tVx / 2;
+							var rjXMin = rj.Anchor.X - tVx / 2;
+							var rjYMax = rj.Anchor.Y + rj.Space.YDimension - tVy / 2;
+							var rjYMin = rj.Anchor.Y - tVy / 2;
+							var rjStillIn = (rjXMax <= Database.Boundary.XDimension)
+									&& (rjXMin >= 0)
+									&& (rjYMax <= Database.Boundary.YDimension)
+									&& (rjYMin >= 0);
+							#endregion
+
+							// The actual vector.
 							var tV = new Vector(tVx, tVy);
 
-							rj.Move(-tV / 2);
-							ri.Move(tV / 2);
+							// Checking for boundary. Should be improved by having the room go sideways.
+							// Needs to be tested
+							if(riStillIn)
+								ri.Move(tV / 2);
+
+							if(rjStillIn)
+								rj.Move(-tV / 2);
+
 						}
 						else
 						{
