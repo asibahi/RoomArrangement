@@ -101,7 +101,7 @@ namespace RoomArrangement
 
 			var adjacentRooms = r1.ID < r2.ID ? Tuple.Create(r1, r2) : Tuple.Create(r2, r1);
 			adjacencies.Add(adjacentRooms);
-			Console.WriteLine("Rooms {0} and {1} are paired", r1.Name, r2.Name);
+			Console.WriteLine($"{r1.Name}, {r2.Name} are paired");
 		}
 
 		public static void PairRooms(int i, int j) => PairRooms(Database.List[i], Database.List[j]);

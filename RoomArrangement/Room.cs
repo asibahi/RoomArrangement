@@ -11,10 +11,7 @@ namespace RoomArrangement
 		public int Index => id - 1;
 
 		readonly string name;
-		public string Name => string.Format(
-					string.IsNullOrEmpty(name)
-					? "Room {1}"
-					: "Room {1} : {0}", name, ID);
+		public string Name => $"Room {ID}" + (string.IsNullOrEmpty(name) ? "" : $" : {Name}");
 
 		static int Population { get; set; }
 

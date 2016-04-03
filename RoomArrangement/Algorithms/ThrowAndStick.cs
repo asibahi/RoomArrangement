@@ -185,15 +185,16 @@ namespace RoomArrangement
 		static void ga_OnGenerationComplete(object sender, GaEventArgs e)
 		{
 			var c = e.Population.GetTop(1)[0];
-			Console.WriteLine("Fitness is {0}", c.Fitness);
+			Console.WriteLine($"Fitness is {c.Fitness}");
 		}
+
 		static void ga_OnRunComplete(object sender, GaEventArgs e)
 		{
 			var c = e.Population.GetTop(1)[0];
 			ReadChromosome(c);
 
 			Console.WriteLine("The GA is Done");
-			Console.WriteLine("Fitness is {0}", c.Fitness);
+			Console.WriteLine($"Fitness is {c.Fitness}");
 
 
 		}

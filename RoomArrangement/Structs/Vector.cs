@@ -42,7 +42,7 @@ namespace RoomArrangement
 		public double Length => Math.Sqrt((X * X) + (Y * Y));
 		public double Angle => Math.Atan(Y / X);
 
-		public override string ToString() => "V(" + X.ToString() + ", " + Y.ToString() + ")";
+		public override string ToString() => $"V({X}, {Y})";
 
 		#region Fun Stuff
 		// Addition and subtraction.

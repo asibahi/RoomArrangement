@@ -29,10 +29,7 @@ namespace RoomArrangement
 			PushPull.Run();
 
 			foreach(Room r in Database.List)
-				Console.WriteLine("{0}'s coordinates are {1}. Its dimensions are {2}",
-						r.Name,
-						r.Anchor.ToString(),
-						r.Space.ToString());
+				Console.WriteLine($"{r.Name}'s coordinates are {r.Anchor}. Its dimensions are {r.Space}");
 
 			DrawSolution();
 			Console.ReadKey();

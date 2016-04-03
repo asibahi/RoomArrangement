@@ -18,7 +18,7 @@
 			Y = p.Y;
 		}
 
-		public override string ToString() => "(" + X.ToString() + ", " + Y.ToString() + ")";
+		public override string ToString() => $"({X}, {Y})";
 
 		#region Fun Stuff
 		// Addition and subtraction.
