@@ -2,18 +2,17 @@
 
 namespace RoomArrangement
 {
-	class Room
+	abstract class Room
 	{
-
 		// Meta properties
-		readonly int id;
-		public int ID => id;
-		public int Index => id - 1;
+		readonly int roomUniqueID;
+		public int RoomUniqueID => roomUniqueID;
+		public int Index => roomUniqueID - 1;
 
-		readonly string name;
-		public string Name => $"Room {ID}" + (string.IsNullOrEmpty(name) ? "" : $" : {Name}");
+		protected readonly string name;
+		abstract public string Name { get; }
 
-		static int Population { get; set; }
+		static int TotalRoomCount { get; set; }
 
 		// Geometric properties
 		// Note the Anchor here is supposed to be the SW Corner.
@@ -32,7 +31,7 @@ namespace RoomArrangement
 		}
 
 		// Empty Constructor
-		public Room()
+		public Room() 
 			: this(null, new Point(), new Rectangle(3, 4))
 		{
 		}
@@ -40,7 +39,7 @@ namespace RoomArrangement
 		// Constuctor
 		public Room(string n, Point pt, Rectangle rec)
 		{
-			id = ++Population;
+			roomUniqueID = ++TotalRoomCount;
 			name = n;
 
 			Space = rec;

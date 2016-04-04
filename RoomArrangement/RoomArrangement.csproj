@@ -51,6 +51,7 @@
   <ItemGroup>
     <Compile Include="Algorithms\PushPull.cs" />
     <Compile Include="BldgProgram.cs" />
+    <Compile Include="RoomTypes.cs" />
     <Compile Include="Input.cs" />
     <Compile Include="Structs\Vector.cs" />
     <Compile Include="Structs\Rectangle.cs" />

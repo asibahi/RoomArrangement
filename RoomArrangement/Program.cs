@@ -7,23 +7,23 @@ namespace RoomArrangement
 	{
 		static void Main(string[] args)
 		{
-			// Create the Rooms
-			var NumOfRooms = 3;
+			//// Create the Rooms
+			//var NumOfRooms = 3;
 
-			for(int i = 0; i < NumOfRooms; i++)
-				new Room();
+			//for(int i = 0; i < NumOfRooms; i++)
+			//	new Room();
 
 
-			// This is just to test the code with three rooms
-			Database.PairRooms(0, 1);
-			Database.PairRooms(0, 2);
-			Database.PairRooms(1, 2);
+			//// This is just to test the code with three rooms
+			//Database.PairRooms(0, 1);
+			//Database.PairRooms(0, 2);
+			//Database.PairRooms(1, 2);
 
-			// this is 16 * 4 ft and 24 * 4 ft. Roughly equal to 20 by 30 sqm.
-			// Because my glorious app works on a grid of 4ft.
-			Database.Boundary = new Rectangle(16, 25);
+			//// this is 16 * 4 ft and 24 * 4 ft. Roughly equal to 20 by 30 sqm.
+			//// Because my glorious app works on a grid of 4ft.
+			//Database.Boundary = new Rectangle(16, 25);
 
-			ThrowAndStick.Run(NumOfRooms);
+			//ThrowAndStick.Run(NumOfRooms);
 
 			PushPull.Run();
 

@@ -17,11 +17,14 @@ namespace RoomArrangement
 
 		public static Rectangle Boundary { get; set; }
 
+		public static bool CorridorExists { get; internal set; }
+
 		// Constructor
 		static Database()
 		{
 			list = new List<Room>();
 			adjacencies = new List<Tuple<Room, Room>>();
+			CorridorExists = false;
 		}
 
 		#region Following Default IList implementation. See comments and Todo inside.
@@ -49,6 +52,7 @@ namespace RoomArrangement
 
 
 		public static int Count => List.Count;
+
 
 		public static void Add(Room item) => list.Add(item);
 		// Should it check for duplicates?
@@ -89,17 +93,17 @@ namespace RoomArrangement
 
 		public static void PairRooms(Room r1, Room r2)
 		{
-			if(r1.ID == r2.ID)
+			if(r1.RoomUniqueID == r2.RoomUniqueID)
 				throw new Exception("Cannot pair a room with itself.");
 
 			foreach(var pair in Adjacencies)
 			{
-				if((r1.ID == pair.Item1.ID && r2.ID == pair.Item2.ID)
-				    || (r1.ID == pair.Item2.ID && r2.ID == pair.Item1.ID))
+				if((r1.RoomUniqueID == pair.Item1.RoomUniqueID && r2.RoomUniqueID == pair.Item2.RoomUniqueID)
+				    || (r1.RoomUniqueID == pair.Item2.RoomUniqueID && r2.RoomUniqueID == pair.Item1.RoomUniqueID))
 					throw new Exception("Pair already paired.");
 			}
 
-			var adjacentRooms = r1.ID < r2.ID ? Tuple.Create(r1, r2) : Tuple.Create(r2, r1);
+			var adjacentRooms = r1.RoomUniqueID < r2.RoomUniqueID ? Tuple.Create(r1, r2) : Tuple.Create(r2, r1);
 			adjacencies.Add(adjacentRooms);
 			Console.WriteLine($"{r1.Name}, {r2.Name} are paired");
 		}
@@ -111,9 +115,9 @@ namespace RoomArrangement
 			var rooms = new List<Room>();
 			foreach(var pair in adjacencies)
 			{
-				if(pair.Item1.ID == room.ID)
+				if(pair.Item1.RoomUniqueID == room.RoomUniqueID)
 					rooms.Add(pair.Item2);
-				else if(pair.Item2.ID == room.ID)
+				else if(pair.Item2.RoomUniqueID == room.RoomUniqueID)
 					rooms.Add(pair.Item1);
 			}
 			return rooms;
@@ -123,8 +127,8 @@ namespace RoomArrangement
 		{
 			foreach(var pair in adjacencies)
 			{
-				if((r1.ID == pair.Item1.ID && r2.ID == pair.Item2.ID)
-				    || (r1.ID == pair.Item2.ID && r2.ID == pair.Item1.ID))
+				if((r1.RoomUniqueID == pair.Item1.RoomUniqueID && r2.RoomUniqueID == pair.Item2.RoomUniqueID)
+				    || (r1.RoomUniqueID == pair.Item2.RoomUniqueID && r2.RoomUniqueID == pair.Item1.RoomUniqueID))
 					return true;
 			}
 

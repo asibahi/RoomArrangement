@@ -89,14 +89,14 @@ namespace RoomArrangement
 			if(residentFactor < DimensionsForKitchens.Count())
 			{
 				singleKitchenArea = DimensionsForKitchens[residentFactor] * 12;
-				new Room("Kitchen", new Point(), new Rectangle(DimensionsForKitchens[residentFactor] / 4, 12 / 4));
+				new Kitchen(null, new Point(), new Rectangle(DimensionsForKitchens[residentFactor] / 4, 12 / 4));
 				numOfKitchens = 1;
 			}
 			else
 			{
 				singleKitchenArea = DimensionsForKitchens.Last() * 12;
-				new Room("Clean Kitchen", new Point(), new Rectangle(DimensionsForKitchens.Last() / 4, 12 / 4));
-				new Room("Dirty Kitchen", new Point(), new Rectangle(DimensionsForKitchens.Last() / 4, 12 / 4));
+				new Kitchen("Clean", new Point(), new Rectangle(DimensionsForKitchens.Last() / 4, 12 / 4));
+				new Kitchen("Dirty", new Point(), new Rectangle(DimensionsForKitchens.Last() / 4, 12 / 4));
 				numOfKitchens = 2;
 			}
 			#endregion
@@ -123,7 +123,7 @@ namespace RoomArrangement
 			for(int i = 0; i < numberOfLivingRooms; i++)
 			{
 				var name = i < LvTypes.Length ? LvTypes[i] : LvTypes.Last();
-				new Room(name, new Point(), new Rectangle(dimensionRoundedToGrid, 3));
+				new LivingRoom(name, new Point(), new Rectangle(dimensionRoundedToGrid, 3));
 				// How the fuck will I do the pairings? Do I need multiple lists of Rooms?
 			}
 			#endregion
@@ -138,7 +138,7 @@ namespace RoomArrangement
 			{
 				coupleRoomCount++;
 				couplesRoomsArea += 12 * 20;
-				new Room("Parents Bedroom", new Point(), new Rectangle(5, 3));
+				new Bedroom("Parents Bedroom", new Point(), new Rectangle(5, 3));
 			}
 
 			// Doesnt take into account that maybe the 2 Grandparents arent a couple !!
@@ -146,19 +146,20 @@ namespace RoomArrangement
 			{
 				coupleRoomCount++;
 				couplesRoomsArea += 12 * 20;
-				new Room("Grandparents Bedroom", new Point(), new Rectangle(5, 3));
+				new Bedroom("Grandparents Bedroom", new Point(), new Rectangle(5, 3));
 			}
 
 			if(gparents > 2)
 			{
 				coupleRoomCount++;
 				couplesRoomsArea += 12 * 20;
-				new Room("Second Grandparents Bedroom", new Point(), new Rectangle(5, 3));
+				new Bedroom("Second Grandparents Bedroom", new Point(), new Rectangle(5, 3));
 			}
 
 			if(TotalNumberOfBedrooms >= 5)
-				new Room("Corridor", new Point(), new Rectangle(3 * TotalNumberOfBedrooms, 1));
+				new Corridor("Bedroom Corridor", new Point(), new Rectangle(3 * TotalNumberOfBedrooms, 1));
 			// This is so bad
+
 
 			#endregion
 		}
@@ -176,20 +177,20 @@ namespace RoomArrangement
 				{
 					oddBedroomsArea += 16 * 12;
 					numberOfOddBedrooms++;
-					new Room("Older Kids Bedroom", new Point(), new Rectangle(4, 3));
+					new Bedroom("Older Kids Bedroom", new Point(), new Rectangle(4, 3));
 				}
 				else
 				{
 					oddBedroomsArea += ((4 * (residentFactor - 1)) + 12) * 12;
 					numberOfOddBedrooms++;
-					new Room("Older Kids Bedroom", new Point(), new Rectangle(((residentFactor - 1)) + 3, 3));
+					new Bedroom("Older Kids Bedroom", new Point(), new Rectangle(((residentFactor - 1)) + 3, 3));
 				}
 			}
 
 			typicalBedroomsArea += (((4 * kpbr) + 8) * 12) * NumberOfTypicalBrs;
 
 			for(int i = 0; i < NumberOfTypicalBrs; i++)
-				new Room("Kids Bedroom", new Point(), new Rectangle(kpbr + 2, 3));
+				new Bedroom("Kids Bedroom", new Point(), new Rectangle(kpbr + 2, 3));
 
 		}
 	}
