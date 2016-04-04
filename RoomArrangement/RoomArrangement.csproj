@@ -50,6 +50,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Algorithms\PushPull.cs" />
+    <Compile Include="BldgProgram.cs" />
+    <Compile Include="Input.cs" />
     <Compile Include="Structs\Vector.cs" />
     <Compile Include="Structs\Rectangle.cs" />
     <Compile Include="Algorithms\ThrowAndStick.cs" />
