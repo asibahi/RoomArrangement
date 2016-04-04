@@ -11,9 +11,8 @@ namespace RoomArrangement
 			var NumOfRooms = 3;
 
 			for(int i = 0; i < NumOfRooms; i++)
-			{
-				var r = new Room();
-			}
+				new Room();
+
 
 			// This is just to test the code with three rooms
 			Database.PairRooms(0, 1);
@@ -41,9 +40,7 @@ namespace RoomArrangement
 			var rooms = new Dictionary<Point, Rectangle>();
 
 			foreach(Room r in Database.List)
-			{
 				rooms.Add(r.Anchor, r.Space);
-			}
 
 			var roomCounter = 0;
 			var recXStart = 21;
