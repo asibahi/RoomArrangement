@@ -81,6 +81,9 @@ namespace RoomArrangement
 			plotWidth = input.PlotWidth;
 			totalResidents = input.Total;
 
+			// Doesnt account for direction
+			Database.Boundary = new Rectangle(plotWidth / 4, plotDepth / 4);
+
 			#region Kitchen Calcs
 			var residentFactor = (int)(Ceiling(totalResidents / 2) - 1);
 			if(residentFactor < DimensionsForKitchens.Count())
@@ -152,6 +155,11 @@ namespace RoomArrangement
 				couplesRoomsArea += 12 * 20;
 				new Room("Second Grandparents Bedroom", new Point(), new Rectangle(5, 3));
 			}
+
+			if(TotalNumberOfBedrooms >= 5)
+				new Room("Corridor", new Point(), new Rectangle(3 * TotalNumberOfBedrooms, 1));
+			// This is so bad
+
 			#endregion
 		}
 
