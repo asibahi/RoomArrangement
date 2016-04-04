@@ -31,7 +31,7 @@ namespace RoomArrangement
 		}
 
 		// Empty Constructor
-		public Room() 
+		public Room()
 			: this(null, new Point(), new Rectangle(3, 4))
 		{
 		}
