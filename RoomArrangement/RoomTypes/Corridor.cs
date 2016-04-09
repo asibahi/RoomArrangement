@@ -10,7 +10,5 @@
 		{
 			corridorID = ++CorridorCount;
 		}
-
-		public Corridor(int x, int y) : base(x, y) { }
 	}
 }
