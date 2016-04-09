@@ -43,19 +43,14 @@ namespace RoomArrangement
 			foreach(Room r in MainList)
 				if(r.UniqueID == item.UniqueID)
 					return true;
-
 			return false;
 		}
 
 		public int IndexOf(Room item)
 		{
 			for(int i = 0; i < Count; i++)
-			{
-				var r = MainList[i];
-				if(r.UniqueID == item.UniqueID)
+				if(this[i].UniqueID == item.UniqueID)
 					return i;
-			}
-
 			return -1;
 		}
 
@@ -78,11 +73,9 @@ namespace RoomArrangement
 				throw new Exception("Cannot pair a room with itself.");
 
 			foreach(var pair in Adjacencies)
-			{
 				if((r1.UniqueID == pair.Item1.UniqueID && r2.UniqueID == pair.Item2.UniqueID)
 				    || (r1.UniqueID == pair.Item2.UniqueID && r2.UniqueID == pair.Item1.UniqueID))
 					throw new Exception("Pair already paired.");
-			}
 
 			var adjacentRooms = r1.NumericID < r2.NumericID ? Tuple.Create(r1, r2) : Tuple.Create(r2, r1);
 			adjacencies.Add(adjacentRooms);
@@ -93,24 +86,19 @@ namespace RoomArrangement
 		{
 			var rooms = new List<Room>();
 			foreach(var pair in adjacencies)
-			{
 				if(pair.Item1.UniqueID == room.UniqueID)
 					rooms.Add(pair.Item2);
 				else if(pair.Item2.UniqueID == room.UniqueID)
 					rooms.Add(pair.Item1);
-			}
 			return rooms;
 		}
 
 		public bool AreAdjacent(Room r1, Room r2)
 		{
 			foreach(var pair in adjacencies)
-			{
 				if((r1.UniqueID == pair.Item1.UniqueID && r2.UniqueID == pair.Item2.UniqueID)
 				    || (r1.UniqueID == pair.Item2.UniqueID && r2.UniqueID == pair.Item1.UniqueID))
 					return true;
-			}
-
 			return false;
 		}
 
@@ -124,6 +112,5 @@ namespace RoomArrangement
 
 		public void AddRoom<T>(int x, int y) where T : Room => AddRoom<T>(null, Point.Origin, new Rectangle(x, y));
 		public void AddRoom<T>(string name, int x, int y) where T : Room => AddRoom<T>(name, Point.Origin, new Rectangle(x, y));
-
 	}
 }
