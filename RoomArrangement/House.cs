@@ -2,8 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using static System.Activator;
 
 namespace RoomArrangement
 {
@@ -115,29 +114,16 @@ namespace RoomArrangement
 			return false;
 		}
 
-		public void AddRoom(RoomType type, string name, Point pt, Rectangle rec)
+		public void AddRoom<T>(string name, Point pt, Rectangle rec) where T : Room
 		{
-			Room r = null;
-			switch(type)
-			{
-				case RoomType.Bedroom:
-					r = new Bedroom(name, pt, rec);
-					break;
-				case RoomType.Corridor:
-					r = new Corridor(name, pt, rec);
-					break;
-				case RoomType.Kitchen:
-					r = new Kitchen(name, pt, rec);
-					break;
-				case RoomType.LivingRoom:
-					r = new LivingRoom(name, pt, rec);
-					break;
-				default:
-					throw new Exception("This should never happen!! "
-						+ "Did you create a new Room type without adding it to the Enum?");
-			}
-
-			Add(r);
+			// If documentation of Activator class it to be believed,
+			// Should create an instance of T. As if it was // new T(name, pt, rec);
+			var room = (T)CreateInstance(typeof(T), name, pt, rec);
+			Add(room);
 		}
+
+		public void AddRoom<T>(int x, int y) where T : Room => AddRoom<T>(null, Point.Origin, new Rectangle(x, y));
+		public void AddRoom<T>(string name, int x, int y) where T : Room => AddRoom<T>(name, Point.Origin, new Rectangle(x, y));
+
 	}
 }

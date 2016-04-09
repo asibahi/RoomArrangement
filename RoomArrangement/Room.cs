@@ -31,8 +31,7 @@ namespace RoomArrangement
 			}
 		}
 
-		// Constructors
-		protected Room(int x, int y) : this(null, Point.Origin, new Rectangle(x, y)) { }
+		// Constructor
 		protected Room(string n, Point pt, Rectangle rec)
 		{
 			numericID = ++TotalRoomCount;

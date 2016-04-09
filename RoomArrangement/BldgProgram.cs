@@ -69,7 +69,7 @@ namespace RoomArrangement
 			CreateCouplesBedrooms();
 
 			if(TotalNumberOfBedrooms >= 5)
-				house.AddRoom(RoomType.Corridor, "Bedroom Corridor", Point.Origin, new Rectangle(3 * TotalNumberOfBedrooms, 1));
+				house.AddRoom<Corridor>("Bedrooms", 3 * TotalNumberOfBedrooms, 1);
 			// This is so bad
 		}
 
@@ -80,14 +80,14 @@ namespace RoomArrangement
 			if(resFactor < DimsForKitchens.Count())
 			{
 				singleKitchenArea = DimsForKitchens[resFactor] * 12;
-				house.AddRoom(RoomType.Kitchen, null, Point.Origin, new Rectangle(DimsForKitchens[resFactor] / 4, 12 / 4));
+				house.AddRoom<Kitchen>(DimsForKitchens[resFactor] / 4, 3);
 				numOfKitchens = 1;
 			}
 			else
 			{
 				singleKitchenArea = DimsForKitchens.Last() * 12;
-				house.AddRoom(RoomType.Kitchen, "Clean", Point.Origin, new Rectangle(DimsForKitchens.Last() / 4, 12 / 4));
-				house.AddRoom(RoomType.Kitchen, "Dirty", Point.Origin, new Rectangle(DimsForKitchens.Last() / 4, 12 / 4));
+				house.AddRoom<Kitchen>("Clean", DimsForKitchens.Last() / 4, 3);
+				house.AddRoom<Kitchen>("Dirty", DimsForKitchens.Last() / 4, 3);
 				numOfKitchens = 2;
 			}
 
@@ -113,8 +113,7 @@ namespace RoomArrangement
 			for(int i = 0; i < numberOfLivingRooms; i++)
 			{
 				var name = i < LvTypes.Length ? LvTypes[i] : LvTypes.Last();
-				house.AddRoom(RoomType.LivingRoom, name, Point.Origin, new Rectangle(dimRoundedToGrid, 3));
-				// How the fuck will I do the pairings? Do I need multiple lists of Rooms?
+				house.AddRoom<LivingRoom>(name, dimRoundedToGrid, 3);
 			}
 		}
 
@@ -131,20 +130,20 @@ namespace RoomArrangement
 				{
 					oddBedroomsArea += 16 * 12;
 					numberOfOddBedrooms++;
-					house.AddRoom(RoomType.Bedroom, "Older Kids Bedroom", Point.Origin, new Rectangle(4, 3));
+					house.AddRoom<Bedroom>("Older Kids", 4, 3);
 				}
 				else
 				{
 					oddBedroomsArea += ((4 * (residentFactor - 1)) + 12) * 12;
 					numberOfOddBedrooms++;
-					house.AddRoom(RoomType.Bedroom, "Older Kids Bedroom", Point.Origin, new Rectangle(((residentFactor - 1)) + 3, 3));
+					house.AddRoom<Bedroom>("Older Kids", residentFactor + 2, 3);
 				}
 			}
 
 			typicalBedroomsArea += (((4 * kpbr) + 8) * 12) * numOfTypicalBrs;
 
 			for(int i = 0; i < numOfTypicalBrs; i++)
-				house.AddRoom(RoomType.Bedroom, "Kids Bedroom", Point.Origin, new Rectangle(kpbr + 2, 3));
+				house.AddRoom<Bedroom>("Kids", kpbr + 2, 3);
 		}
 
 		void CreateCouplesBedrooms()
@@ -153,7 +152,7 @@ namespace RoomArrangement
 			{
 				coupleRoomCount++;
 				couplesRoomsArea += 12 * 20;
-				house.AddRoom(RoomType.Bedroom, "Parents Bedroom", Point.Origin, new Rectangle(5, 3));
+				house.AddRoom<Bedroom>("Parents", 5, 3);
 			}
 
 			// Doesnt take into account that maybe the 2 Grandparents arent a couple !!
@@ -161,14 +160,14 @@ namespace RoomArrangement
 			{
 				coupleRoomCount++;
 				couplesRoomsArea += 12 * 20;
-				house.AddRoom(RoomType.Bedroom, "Grandparents Bedroom", Point.Origin, new Rectangle(5, 3));
+				house.AddRoom<Bedroom>("Grandparents", 5, 3);
 			}
 
 			if(gparents > 2)
 			{
 				coupleRoomCount++;
 				couplesRoomsArea += 12 * 20;
-				house.AddRoom(RoomType.Bedroom, "Second Grandparents Bedroom", new Point(), new Rectangle(5, 3));
+				house.AddRoom<Bedroom>("Second Grandparents", 5, 3);
 			}
 		}
 	}

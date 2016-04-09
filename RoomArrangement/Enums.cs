@@ -2,13 +2,6 @@
 
 namespace RoomArrangement
 {
-	enum RoomType {
-		LivingRoom,
-		Bedroom,
-		Kitchen,
-		Corridor
-	}
-
 	[Flags]
 	enum CardinalDirections
 	{
