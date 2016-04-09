@@ -18,6 +18,8 @@
 			Y = p.Y;
 		}
 
+		public static Point Origin = new Point();
+
 		public override string ToString() => $"({X}, {Y})";
 
 		#region Fun Stuff

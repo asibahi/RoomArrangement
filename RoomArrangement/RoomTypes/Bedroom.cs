@@ -10,5 +10,7 @@
 		{
 			bedroomID = ++BedroomCount;
 		}
+
+		public Bedroom(int x, int y) : base(x, y) { }
 	}
 }

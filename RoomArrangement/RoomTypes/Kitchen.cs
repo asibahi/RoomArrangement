@@ -10,5 +10,7 @@
 		{
 			kitchenID = ++KitchenCount;
 		}
+
+		public Kitchen(int x, int y) : base(x, y) { }
 	}
 }

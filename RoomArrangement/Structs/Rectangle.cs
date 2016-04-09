@@ -3,24 +3,24 @@
 	// Replicating shit from the Rhino SDK for my purposes
 	struct Rectangle
 	{
-		public int XDimension { get; set; }
-		public int YDimension { get; set; }
+		public int XDim { get; set; }
+		public int YDim { get; set; } 
 
 		public Rectangle(int x, int y)
 		{
-			XDimension = x;
-			YDimension = y;
+			XDim = x;
+			YDim = y;
 		}
 
 		public Rectangle(Rectangle r)
 		{
-			XDimension = r.XDimension;
-			YDimension = r.YDimension;
+			XDim = r.XDim;
+			YDim = r.YDim;
 		}
 
-		public int Area => XDimension * YDimension;
-		public int Circumfrance => 2 * XDimension + 2 * YDimension;
+		public int Area => XDim * YDim;
+		public int Circumfrance => 2 * XDim + 2 * YDim;
 
-		public override string ToString() => $"[{XDimension}, {YDimension}]";
+		public override string ToString() => $"[{XDim}, {YDim}]";
 	}
 }

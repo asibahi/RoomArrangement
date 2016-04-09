@@ -9,7 +9,8 @@
 		public Corridor(string n, Point pt, Rectangle rec) : base(n, pt, rec)
 		{
 			corridorID = ++CorridorCount;
-			Database.CorridorExists = true;
 		}
+
+		public Corridor(int x, int y) : base(x, y) { }
 	}
 }

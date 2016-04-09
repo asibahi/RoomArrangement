@@ -1,55 +1,50 @@
-﻿using static System.Math;
+﻿using System;
+using static System.Math;
 
 namespace RoomArrangement
 {
 	abstract class Room
 	{
 		// Meta properties
-		readonly int roomUniqueID;
-		public int RoomUniqueID => roomUniqueID;
-		public int Index => roomUniqueID - 1;
-
+		readonly int numericID;
 		protected readonly string name;
-		abstract public string Name { get; }
+		private readonly Guid uniqueID;
 
+		public int NumericID => numericID; // Used for ordering in Tuples.
+		abstract public string Name { get; }
+		public Guid UniqueID => uniqueID;
 		static int TotalRoomCount { get; set; }
 
 		// Geometric properties
 		// Note the Anchor here is supposed to be the SW Corner.
 		public Rectangle Space { get; private set; }
 		public Point Anchor { get; private set; }
-		public char Orientation => Space.XDimension == Space.YDimension ? 'O' : (Space.XDimension > Space.YDimension ? 'X' : 'Y');
+		public char Orientation => Space.XDim == Space.YDim ? 'O' : (Space.XDim > Space.YDim ? 'X' : 'Y');
 		public Point Center
 		{
 			get
 			{
 				var pt = new Point(Anchor);
-				pt.X += Space.XDimension / 2;
-				pt.Y += Space.YDimension / 2;
+				pt.X += Space.XDim / 2;
+				pt.Y += Space.YDim / 2;
 				return pt;
 			}
 		}
 
-		// Empty Constructor
-		public Room()
-			: this(null, new Point(), new Rectangle(3, 4))
+		// Constructors
+		protected Room(int x, int y) : this(null, Point.Origin, new Rectangle(x, y)) { }
+		protected Room(string n, Point pt, Rectangle rec)
 		{
-		}
-
-		// Constuctor
-		public Room(string n, Point pt, Rectangle rec)
-		{
-			roomUniqueID = ++TotalRoomCount;
+			numericID = ++TotalRoomCount;
+			uniqueID = Guid.NewGuid();
 			name = n;
 
 			Space = rec;
 			Anchor = pt;
-
-			Database.Add(this);
 		}
 
 		// Methods and stuff
-		public void Rotate() => Space = new Rectangle(Space.YDimension, Space.XDimension);
+		public void Rotate() => Space = new Rectangle(Space.YDim, Space.XDim);
 
 		public void Adjust(int x, int y, bool YOrientation) => Adjust(new Point(x, y), YOrientation);
 		public void Adjust(Point pt, bool YOrientation)
@@ -67,5 +62,16 @@ namespace RoomArrangement
 
 		public void Move(Vector v) => Anchor += new Point((int)Ceiling(v.X), (int)Ceiling(v.Y));
 		public void Move(int x, int y) => Move(new Vector(x, y));
+
+		public void Read(out double recX,
+				out double recY,
+				out double cntX,
+				out double cntY)
+		{
+			recX = Space.XDim;
+			recY = Space.YDim;
+			cntX = Center.X;
+			cntY = Center.Y;
+		}
 	}
 }

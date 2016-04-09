@@ -7,39 +7,31 @@ namespace RoomArrangement
 	{
 		static void Main(string[] args)
 		{
-			//// Create the Rooms
-			//var NumOfRooms = 3;
+			var input = CardinalDirections.North | CardinalDirections.South;
+			var house = new House(input);
 
-			//for(int i = 0; i < NumOfRooms; i++)
-			//	new Room();
+			// TODO LiSt:
+			//
+			// * IMPLEMENT Input AND BldgProgram Functions, and connect them to House
+			//
+			// * Implement a better way to Pass Streetside to the House, and pass a main street.
 
+			ThrowAndStick.Run(house);
+			PushPull.Run(house);
 
-			//// This is just to test the code with three rooms
-			//Database.PairRooms(0, 1);
-			//Database.PairRooms(0, 2);
-			//Database.PairRooms(1, 2);
-
-			//// this is 16 * 4 ft and 24 * 4 ft. Roughly equal to 20 by 30 sqm.
-			//// Because my glorious app works on a grid of 4ft.
-			//Database.Boundary = new Rectangle(16, 25);
-
-			//ThrowAndStick.Run(NumOfRooms);
-
-			PushPull.Run();
-
-			foreach(Room r in Database.List)
+			foreach(Room r in house)
 				Console.WriteLine($"{r.Name}'s coordinates are {r.Anchor}. Its dimensions are {r.Space}");
 
-			DrawSolution();
+			DrawSolution(house);
 			Console.ReadKey();
 		}
 
 		// Needs rework
-		static void DrawSolution()
+		static void DrawSolution(House house)
 		{
 			var rooms = new Dictionary<Point, Rectangle>();
 
-			foreach(Room r in Database.List)
+			foreach(Room r in house)
 				rooms.Add(r.Anchor, r.Space);
 
 			var roomCounter = 0;
@@ -72,7 +64,7 @@ namespace RoomArrangement
 					{
 						Console.Write("|_");
 						recXCount++;
-						if(recXCount >= currentRec.XDimension)
+						if(recXCount >= currentRec.XDim)
 						{
 							inRectangle = false;
 						}

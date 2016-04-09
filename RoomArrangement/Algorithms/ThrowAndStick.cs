@@ -6,14 +6,13 @@ using static System.Math;
 
 namespace RoomArrangement
 {
-	// The name is short for Throw-Stuff-At-The-Wall-and-See-What-Sticks,
-	// which is what the GA all really does.
+	// Doesn't need to be static. Would it be better performance to have it not?
 	static class ThrowAndStick
 	{
 		// Using Genetic Algorithms
-		public static void Run(int NumOfRooms)
+		public static void Run(House house)
 		{
-			var population = new Population(100, 9 * NumOfRooms, false, false);
+			var population = new Population(100, 9 * house.Count, false, false);
 
 			//create the genetic operators 
 			var elite = new Elite(5);
@@ -24,7 +23,7 @@ namespace RoomArrangement
 			var mutation = new BinaryMutate(0.08, true);
 
 			//create the GA itself 
-			var ga = new GeneticAlgorithm(population, CalculateFitness);
+			var ga = new GeneticAlgorithm(population, chromosome => EvaluateFitness(chromosome, house)); // Of course Lambda funcs return a delegate ...
 
 			//add the operators to the ga process pipeline 
 			ga.Operators.Add(elite);
@@ -32,46 +31,40 @@ namespace RoomArrangement
 			ga.Operators.Add(mutation);
 
 			// Events subscription
-			ga.OnRunComplete += ga_OnRunComplete;
 			ga.OnGenerationComplete += ga_OnGenerationComplete;
+			ga.OnRunComplete += (sender, e) => ga_OnRunComplete(sender, e, house);
 
 			// Run the GA 
 			Console.WriteLine("Starting the GA");
 			ga.Run(Terminate);
-
 		}
 
-		public static double CalculateFitness(Chromosome c)
+		public static double EvaluateFitness(Chromosome c, House house)
 		{
 			var fitnessList = new List<double>();
 
-			ReadChromosome(c);
+			ReadChromosome(c, house);
 
 			// Actual Evaluation
-			for(int i = 0; i < Database.Count; i++)
-			{
-				for(int j = i; j < Database.Count; j++)
-				{
-					fitnessList.Add(CompareRooms(i, j));
-				}
-			}
+			for(int i = 0; i < house.Count; i++)
+				for(int j = i; j < house.Count; j++)
+					fitnessList.Add(CompareRooms(i, j, house));
 
 			// Check for Boundary compliance
-			foreach(Room r in Database.List)
+			foreach(Room r in house)
 			{
-				var xFarthest = r.Anchor.X + r.Space.XDimension - Database.Boundary.XDimension;
+				var xFarthest = r.Anchor.X + r.Space.XDim - house.Boundary.XDim;
 				if(xFarthest > 0)
 					fitnessList.Add(Pow(GaussianFunc(xFarthest), 2));
 				else
 					fitnessList.Add(1d);
 
-				var yFarthest = r.Anchor.Y + r.Space.YDimension - Database.Boundary.YDimension;
+				var yFarthest = r.Anchor.Y + r.Space.YDim - house.Boundary.YDim;
 				if(yFarthest > 0)
 					fitnessList.Add(Pow(GaussianFunc(yFarthest), 2));
 				else
 					fitnessList.Add(1d);
 			}
-
 
 			fitnessList.Add(1d);
 			// return fitnessList.Average();
@@ -79,16 +72,16 @@ namespace RoomArrangement
 			double fitness = 1;
 			foreach(double d in fitnessList)
 				fitness *= d;
+
 			return fitness;
 		}
 
 		public static bool Terminate(Population population,
 						int currentGeneration,
-						long currentEvaluation)
-						=> (population.MaximumFitness == 1);
+						long currentEvaluation) => (population.MaximumFitness == 1);
 
 		// It should compare whether two rooms intersect and if they are related, how far they are.
-		static double CompareRooms(int i, int j)
+		static double CompareRooms(int i, int j, House house)
 		{
 			var returnVal = 1d;
 			if(i != j)
@@ -96,19 +89,17 @@ namespace RoomArrangement
 				double xRec1, yRec1, xCnt1, yCnt1;
 				double xRec2, yRec2, xCnt2, yCnt2;
 
-				var ri = Database.List[i];
-				var rj = Database.List[j];
+				var ri = house[i];
+				var rj = house[j];
 
-				Database.ReadRoom(i, out xRec1, out yRec1, out xCnt1, out yCnt1);
-				Database.ReadRoom(j, out xRec2, out yRec2, out xCnt2, out yCnt2);
+				ri.Read(out xRec1, out yRec1, out xCnt1, out yCnt1);
+				rj.Read(out xRec2, out yRec2, out xCnt2, out yCnt2);
 
 				double xDim = Abs(xCnt1 - xCnt2) - ((xRec1 / 2) + (xRec2 / 2));
 				double yDim = Abs(yCnt1 - yCnt2) - ((yRec1 / 2) + (yRec2 / 2));
 
 				// Related Rooms logic
-				bool areRoomsRelated = Database.AreAdjacent(ri, rj);
-
-				if(areRoomsRelated)
+				if(house.AreAdjacent(ri, rj))
 				{
 					if((xDim == 0 && yDim < 0) || (xDim < 0 && yDim == 0))
 						returnVal = 1;
@@ -134,7 +125,7 @@ namespace RoomArrangement
 			return returnVal;
 		}
 
-		static void ReadChromosome(Chromosome c)
+		static void ReadChromosome(Chromosome c, House house)
 		{
 			// Assuming each chromosome represents a certain arrangmenet of THREE rooms
 			// The chrome will have, for each room:
@@ -161,7 +152,7 @@ namespace RoomArrangement
 
 				var j = i / 9;
 
-				Database.List[j].Adjust(x, y, o);
+				house[j].Adjust(x, y, o);
 			}
 		}
 
@@ -188,15 +179,13 @@ namespace RoomArrangement
 			Console.WriteLine($"Fitness is {c.Fitness}");
 		}
 
-		static void ga_OnRunComplete(object sender, GaEventArgs e)
+		static void ga_OnRunComplete(object sender, GaEventArgs e, House house)
 		{
 			var c = e.Population.GetTop(1)[0];
-			ReadChromosome(c);
+			ReadChromosome(c, house);
 
 			Console.WriteLine("The GA is Done");
 			Console.WriteLine($"Fitness is {c.Fitness}");
-
-
 		}
 	}
 }
