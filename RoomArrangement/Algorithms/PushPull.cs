@@ -25,7 +25,7 @@ namespace RoomArrangement
 					for(int j = i + 1; j < house.Count; j++)
 					{
 						var rj = house[j];
-						resolvedCount = PushOrAddCount(house, resolvedCount, ri, rj);
+						resolvedCount = PushOrAddCount(resolvedCount, ri, rj, house.Boundary);
 					}
 				}
 
@@ -89,7 +89,7 @@ namespace RoomArrangement
 			}
 		}
 
-		private static int PushOrAddCount(House house, int resolvedCount, Room ri, Room rj)
+		private static int PushOrAddCount(int resolvedCount, Room ri, Room rj, Rectangle boundary)
 		{
 			#region Switching Switches
 			double xRec1, yRec1, xCnt1, yCnt1;
@@ -127,8 +127,8 @@ namespace RoomArrangement
 
 				var tV = new Vector(tVx, tVy);
 
-				bool riStillIn = IsStillIn(house, ri, tV);
-				bool rjStillIn = IsStillIn(house, rj, tV);
+				bool riStillIn = IsStillIn(ri, tV, boundary);
+				bool rjStillIn = IsStillIn(rj, tV, boundary);
 
 				// Checking for boundary. Should be improved by having the room go sideways.
 				// Needs to be tested
@@ -143,16 +143,16 @@ namespace RoomArrangement
 			return resolvedCount;
 		}
 
-		static bool IsStillIn(House house, Room room, Vector tV)
+		static bool IsStillIn(Room room, Vector tV, Rectangle boundary)
 		{
 			// Positions of room after moving. To check if it's outside boundary
 			var xMax = room.Anchor.X + room.Space.XDim + tV.X / 2;
 			var xMin = room.Anchor.X + tV.X / 2;
 			var yMax = room.Anchor.Y + room.Space.YDim + tV.Y / 2;
 			var yMin = room.Anchor.Y + tV.Y / 2;
-			return (xMax <= house.Boundary.XDim)
+			return (xMax <= boundary.XDim)
 				&& (xMin >= 0)
-				&& (yMax <= house.Boundary.YDim)
+				&& (yMax <= boundary.YDim)
 				&& (yMin >= 0);
 		}
 	}
