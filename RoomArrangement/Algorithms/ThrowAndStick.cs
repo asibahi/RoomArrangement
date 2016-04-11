@@ -6,20 +6,16 @@ using static System.Math;
 
 namespace RoomArrangement
 {
-	// Doesn't need to be static. Would it be better performance to have it not?
 	static class ThrowAndStick
 	{
 		// Using Genetic Algorithms
-		public static void Run(House house)
+		public static void RunThrowAndStick(this House house)
 		{
 			var population = new Population(100, 9 * house.Count, false, false);
 
 			//create the genetic operators 
 			var elite = new Elite(5);
-			var crossover = new Crossover(0.85, true)
-			{
-				CrossoverType = CrossoverType.SinglePoint
-			};
+			var crossover = new Crossover(0.85, true, CrossoverType.SinglePoint);
 			var mutation = new BinaryMutate(0.08, true);
 
 			//create the GA itself 
@@ -67,7 +63,6 @@ namespace RoomArrangement
 			}
 
 			fitnessList.Add(1d);
-			// return fitnessList.Average();
 
 			double fitness = 1;
 			foreach(double d in fitnessList)

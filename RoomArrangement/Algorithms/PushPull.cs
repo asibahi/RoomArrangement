@@ -5,7 +5,7 @@ namespace RoomArrangement
 {
 	static class PushPull
 	{
-		public static void Run(House house)
+		public static void RunPushPull(this House house)
 		{
 			var hardCount = 0;
 			var resolvedCount = 0;
@@ -14,24 +14,17 @@ namespace RoomArrangement
 
 			do
 			{
-				// VERBAL ALGORITHM:
 				// Go through every Adjacency Tuple. Pull the second room towards the first.
+				//
+				// Experimental. Since Room is reference type I am going to edit
+				// stuff within the Tuple instead of fishing out the ID.
 				foreach(Tuple<Room, Room> tuple in house.Adjacencies)
-				{
-					// Experimental. Since Room is reference type I am going to edit
-					// stuff within the Tuple instead of fishing out the ID.
-					var r1 = tuple.Item1;
-					var r2 = tuple.Item2;
+					Pull(tuple.Item1, tuple.Item2);
 
-					Pull(r1, r2);
-				}
-
-				// VERBAL ALGORITHM
 				// Go Through the rooms in sequence and move them away from each other.
 				for(int i = 0; i < house.Count; i++)
 				{
 					var ri = house[i];
-
 					for(int j = i + 1; j < house.Count; j++)
 					{
 						var rj = house[j];
@@ -62,7 +55,6 @@ namespace RoomArrangement
 			var yDir = 1;
 			var xAlign = 0; // Do I need
 			var yAlign = 0; // these?
-
 			var random = new Random().Next();
 
 			if(xCnt2 > xCnt1)
@@ -78,23 +70,15 @@ namespace RoomArrangement
 				yOn = 1;
 
 			if(xDim > 0 && yDim > 0)
-			{
 				if(xDim > yDim)
-				{
 					yAlign = 1;
-				}
-				else if(yDim > xDim)
-				{
+				else if(xDim < yDim)
 					xAlign = 1;
-				}
+				else if(random % 2 == 0)
+					yAlign = 1;
 				else
-				{
-					if(random % 2 == 0)
-						yAlign = 1;
-					else
-						xAlign = 1;
-				}
-			}
+					xAlign = 1;
+
 			#endregion
 
 			if(xDim != 0 && yDim != 0)
@@ -125,10 +109,10 @@ namespace RoomArrangement
 			var yDir = 1;
 			var random = new Random().Next();
 
-			if(xCnt2 > xCnt1)
+			if(xCnt1 < xCnt2)
 				xDir = -1;
 
-			if(yCnt2 > yCnt1)
+			if(yCnt1 < yCnt2)
 				yDim = -1;
 
 			if(xDim < yDim || (xDim == yDim && random % 2 == 0))
@@ -136,6 +120,7 @@ namespace RoomArrangement
 			else
 				yOn = 1;
 			#endregion
+
 			if(xDim > 0 && yDim > 0)
 			{
 				resolvedCount = 0;
@@ -143,39 +128,17 @@ namespace RoomArrangement
 				var tVx = xDir * xDim * xOn;
 				var tVy = yDir * yDim * yOn;
 
-				#region Out of Bounds variables
-				// Positions of ri and rj after moving. To check if they're outside boundary
-				// ri new positions after change
-				var riXMax = ri.Anchor.X + ri.Space.XDim + tVx / 2;
-				var riXMin = ri.Anchor.X + tVx / 2;
-				var riYMax = ri.Anchor.Y + ri.Space.YDim + tVy / 2;
-				var riYMin = ri.Anchor.Y + tVy / 2;
-				var riStillIn = (riXMax <= house.Boundary.XDim)
-						&& (riXMin >= 0)
-						&& (riYMax <= house.Boundary.YDim)
-						&& (riYMax >= 0);
-
-				// rj new positions after change
-				var rjXMax = rj.Anchor.X + rj.Space.XDim - tVx / 2;
-				var rjXMin = rj.Anchor.X - tVx / 2;
-				var rjYMax = rj.Anchor.Y + rj.Space.YDim - tVy / 2;
-				var rjYMin = rj.Anchor.Y - tVy / 2;
-				var rjStillIn = (rjXMax <= house.Boundary.XDim)
-						&& (rjXMin >= 0)
-						&& (rjYMax <= house.Boundary.YDim)
-						&& (rjYMin >= 0);
-				#endregion
-
 				var tV = new Vector(tVx, tVy);
+
+				bool riStillIn = IsStillIn(house, ri, tV);
+				bool rjStillIn = IsStillIn(house, rj, tV);
 
 				// Checking for boundary. Should be improved by having the room go sideways.
 				// Needs to be tested
 				if(riStillIn)
 					ri.Move(tV / 2);
-
 				if(rjStillIn)
 					rj.Move(-tV / 2);
-
 			}
 			else
 			{
@@ -183,6 +146,19 @@ namespace RoomArrangement
 			}
 
 			return resolvedCount;
+		}
+
+		static bool IsStillIn(House house, Room room, Vector tV)
+		{
+			// Positions of room after moving. To check if it's outside boundary
+			var xMax = room.Anchor.X + room.Space.XDim + tV.X / 2;
+			var xMin = room.Anchor.X + tV.X / 2;
+			var yMax = room.Anchor.Y + room.Space.YDim + tV.Y / 2;
+			var yMin = room.Anchor.Y + tV.Y / 2;
+			return (xMax <= house.Boundary.XDim)
+				&& (xMin >= 0)
+				&& (yMax <= house.Boundary.YDim)
+				&& (yMin >= 0);
 		}
 	}
 }

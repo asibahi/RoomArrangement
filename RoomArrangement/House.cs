@@ -6,7 +6,7 @@ using static System.Activator;
 
 namespace RoomArrangement
 {
-	class House : IList<Room> // On a scale from one to ten, how much do I really need to implement IList?
+	class House : IList<Room>
 	{
 		// Fields
 		readonly List<Room> mainList;
@@ -32,6 +32,7 @@ namespace RoomArrangement
 		}
 
 		#region IList Implementation
+		// On a scale from one to ten, how much do I really need to implement IList?
 		public Room this[int index]
 		{
 			get { return MainList[index]; }
@@ -66,7 +67,7 @@ namespace RoomArrangement
 		IEnumerator IEnumerable.GetEnumerator() => MainList.GetEnumerator();
 		#endregion
 
-		public void PairRooms(int i, int j) => PairRooms(MainList[i], MainList[j]);
+		public void PairRooms(int i, int j) => PairRooms(this[i], this[j]);
 		public void PairRooms(Room r1, Room r2)
 		{
 			if(r1.UniqueID == r2.UniqueID)
@@ -102,15 +103,69 @@ namespace RoomArrangement
 			return false;
 		}
 
+		public void AddRoom<T>(int x, int y) where T : Room => AddRoom<T>(null, Point.Origin, new Rectangle(x, y));
+		public void AddRoom<T>(string name, int x, int y) where T : Room => AddRoom<T>(name, Point.Origin, new Rectangle(x, y));
 		public void AddRoom<T>(string name, Point pt, Rectangle rec) where T : Room
 		{
 			// If documentation of Activator class it to be believed,
 			// Should create an instance of T. As if it was // new T(name, pt, rec);
 			var room = (T)CreateInstance(typeof(T), name, pt, rec);
+			if(typeof(T) == typeof(Corridor))
+				CorridorExists = true;
+
 			Add(room);
 		}
 
-		public void AddRoom<T>(int x, int y) where T : Room => AddRoom<T>(null, Point.Origin, new Rectangle(x, y));
-		public void AddRoom<T>(string name, int x, int y) where T : Room => AddRoom<T>(name, Point.Origin, new Rectangle(x, y));
+		// TODO Needs rework
+		public void Draw()
+		{
+			var rooms = new Dictionary<Point, Rectangle>();
+
+			foreach(Room r in this)
+				rooms.Add(r.Anchor, r.Space);
+
+			var roomCounter = 0;
+			var recXStart = 21;
+			var inRectangle = false;
+			var recXCount = 0;
+			var currentRec = new Rectangle();
+			var currentPnt = new Point();
+
+			// Y loop
+			for(int y = 0; y < 20; y++)
+			{
+				// X loop
+				for(int x = 0; x < 20; x++)
+				{
+					var testPt = new Point(x, y);
+					if(rooms.ContainsKey(testPt))
+					{
+						inRectangle = true;
+						roomCounter++;
+						recXStart = x;
+						currentRec = rooms[testPt];
+						currentPnt = testPt;
+					}
+
+					if(recXStart == x)
+						inRectangle = true;
+
+					if(inRectangle)
+					{
+						Console.Write("|_");
+						recXCount++;
+						if(recXCount >= currentRec.XDim)
+							inRectangle = false;
+
+					}
+					else
+					{
+						Console.Write(". ");
+						recXCount = 0;
+					}
+				}
+				Console.Write("\n");
+			}
+		}
 	}
 }
