@@ -15,9 +15,6 @@ namespace RoomArrangement
 			do
 			{
 				// Go through every Adjacency Tuple. Pull the second room towards the first.
-				//
-				// Experimental. Since Room is reference type I am going to edit
-				// stuff within the Tuple instead of fishing out the ID.
 				foreach(Tuple<Room, Room> tuple in house.Adjacencies)
 					Pull(tuple.Item1, tuple.Item2);
 
@@ -141,9 +138,7 @@ namespace RoomArrangement
 					rj.Move(-tV / 2);
 			}
 			else
-			{
 				resolvedCount++;
-			}
 
 			return resolvedCount;
 		}

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using GAF;
 using GAF.Operators;
 using static System.Math;
@@ -53,22 +54,18 @@ namespace RoomArrangement
 				if(xFarthest > 0)
 					fitnessList.Add(Pow(GaussianFunc(xFarthest), 2));
 				else
-					fitnessList.Add(1d);
+					fitnessList.Add(1);
 
 				var yFarthest = r.Anchor.Y + r.Space.YDim - house.Boundary.YDim;
 				if(yFarthest > 0)
 					fitnessList.Add(Pow(GaussianFunc(yFarthest), 2));
 				else
-					fitnessList.Add(1d);
+					fitnessList.Add(1);
 			}
 
-			fitnessList.Add(1d);
+			fitnessList.Add(1);
 
-			double fitness = 1;
-			foreach(double d in fitnessList)
-				fitness *= d;
-
-			return fitness;
+			return fitnessList.Aggregate((x, y) => x * y);
 		}
 
 		public static bool Terminate(Population population,
@@ -95,7 +92,6 @@ namespace RoomArrangement
 
 				// Related Rooms logic
 				if(house.AreAdjacent(ri, rj))
-				{
 					if((xDim == 0 && yDim < 0) || (xDim < 0 && yDim == 0))
 						returnVal = 1;
 
@@ -108,14 +104,9 @@ namespace RoomArrangement
 					else
 						returnVal = GaussianFunc(xDim) * GaussianFunc(yDim);
 
-				}
-				else
-				{
-					// Intersection logic
-					if(xDim < 0 && yDim < 0)
-						returnVal = GaussianFunc(xDim) * GaussianFunc(yDim);
-
-				}
+				else if(xDim < 0 && yDim < 0)
+					// Intersection logic 
+					returnVal = GaussianFunc(xDim) * GaussianFunc(yDim);
 			}
 			return returnVal;
 		}
