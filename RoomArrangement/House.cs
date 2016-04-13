@@ -8,7 +8,7 @@ namespace RoomArrangement
 {
 	class House : IList<Room>
 	{
-		// Fields
+		// Fields and Properties
 		readonly List<Room> mainList;
 		public List<Room> MainList => mainList;
 
@@ -18,17 +18,24 @@ namespace RoomArrangement
 		public List<Tuple<Room, Room>> Adjacencies => adjacencies;
 
 		public CardinalDirections Streetside { get; private set; }
+		public CardinalDirections MainStreet { get; private set; }
 		public Rectangle Boundary { get; set; }
 
 		public bool CorridorExists { get; internal set; }
 
 		// Constructor.
-		public House(CardinalDirections ss)
+		public House(Input input)
 		{
 			mainList = new List<Room>();
 			adjacencies = new List<Tuple<Room, Room>>();
 			CorridorExists = false;
-			Streetside = ss;
+			Streetside = input.StreetSides;
+			MainStreet = input.MainStreet;
+
+			if(input.MainStreet == CardinalDirections.East || input.MainStreet == CardinalDirections.West)
+				Boundary = new Rectangle(input.PlotDepth / 4, input.PlotWidth / 4);
+			else
+				Boundary = new Rectangle(input.PlotWidth / 4, input.PlotDepth / 4);
 		}
 
 		#region IList Implementation
@@ -57,6 +64,8 @@ namespace RoomArrangement
 
 		public int Count => MainList.Count;
 		public bool IsReadOnly => true;
+
+
 		public void Add(Room item) => MainList.Add(item);
 		public void Clear() => MainList.Clear();
 		public void CopyTo(Room[] array, int arrayIndex) => MainList.CopyTo(array, arrayIndex);

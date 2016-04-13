@@ -7,14 +7,14 @@ namespace RoomArrangement
 	{
 		static void Main(string[] args)
 		{
-			var input = CardinalDirections.North | CardinalDirections.South;
-			var house = new House(input);
+			var streetSide = CardinalDirections.North | CardinalDirections.South;
+			var house = new House(streetSide);
 
-			// TODO LiSt:
-			//
-			// * IMPLEMENT Input AND BldgProgram Functions, and connect them to House
-			//
-			// * Implement a better way to Pass Streetside to the House, and pass a main street.
+			var input = new Input();
+
+			// Ask for Input here
+
+			var bldgProgram = new BldgProgram(input, house);
 
 			house.RunThrowAndStick();
 			house.RunPushPull();

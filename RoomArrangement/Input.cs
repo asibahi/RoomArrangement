@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace RoomArrangement
+﻿namespace RoomArrangement
 {
 	class Input
 	{
@@ -25,6 +19,8 @@ namespace RoomArrangement
 			set { gparents = value >= 4 ? 4 : value; }
 		}
 
+		public int Total => Sons + Daughters + parents + gparents;
+
 		private int kpbr = 1;
 		public int KidsPerBedroom
 		{
@@ -36,7 +32,15 @@ namespace RoomArrangement
 
 		public int PlotWidth { get; set; }
 		public int PlotDepth { get; set; }
+		public int PlotArea => PlotWidth * PlotDepth;
 
-		public int Total => Sons + Daughters + parents + gparents;
+		public CardinalDirections MainStreet { get; set; }
+
+		CardinalDirections streetSides;
+		public CardinalDirections StreetSides
+		{
+			get { return MainStreet | streetSides; }
+			set { streetSides = value; }
+		}
 	}
 }

@@ -58,9 +58,6 @@ namespace RoomArrangement
 			totalResidents = input.Total;
 			house = inputHouse;
 
-			// Doesnt account for direction
-			house.Boundary = new Rectangle(plotWidth / 4, plotDepth / 4);
-
 			CreateKitchensAndLivingRooms();
 
 			CreateKidsBedrooms(sons);
@@ -69,7 +66,10 @@ namespace RoomArrangement
 			CreateCouplesBedrooms();
 
 			if(TotalNumberOfBedrooms >= 5)
+			{
 				house.AddRoom<Corridor>("Bedrooms", 3 * TotalNumberOfBedrooms, 1);
+				house.CorridorExists = true;
+			}
 			// This is so bad
 		}
 
