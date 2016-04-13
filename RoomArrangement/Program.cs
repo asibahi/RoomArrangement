@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace RoomArrangement
 {
@@ -7,14 +6,12 @@ namespace RoomArrangement
 	{
 		static void Main(string[] args)
 		{
-			var streetSide = CardinalDirections.North | CardinalDirections.South;
-			var house = new House(streetSide);
-
 			var input = new Input();
 
 			// Ask for Input here
 
-			var bldgProgram = new BldgProgram(input, house);
+			var bldgProgram = new BldgProgram(input);
+			var house = new House(input, bldgProgram);
 
 			house.RunThrowAndStick();
 			house.RunPushPull();

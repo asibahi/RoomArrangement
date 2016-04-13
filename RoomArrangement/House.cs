@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using static System.Activator;
 
 namespace RoomArrangement
 {
@@ -23,8 +22,8 @@ namespace RoomArrangement
 
 		public bool CorridorExists { get; internal set; }
 
-		// Constructor.
-		public House(Input input)
+		// Constructor
+		public House(Input input, BldgProgram bldgProgram)
 		{
 			mainList = new List<Room>();
 			adjacencies = new List<Tuple<Room, Room>>();
@@ -36,7 +35,11 @@ namespace RoomArrangement
 				Boundary = new Rectangle(input.PlotDepth / 4, input.PlotWidth / 4);
 			else
 				Boundary = new Rectangle(input.PlotWidth / 4, input.PlotDepth / 4);
+
+			ReadProgram(bldgProgram);
 		}
+
+
 
 		#region IList Implementation
 		// On a scale from one to ten, how much do I really need to implement IList?
@@ -80,7 +83,7 @@ namespace RoomArrangement
 		public void PairRooms(Room r1, Room r2)
 		{
 			if(r1.UniqueID == r2.UniqueID)
-				throw new Exception("Cannot pair a room with itself.");
+				throw new InvalidOperationException("Cannot pair a room with itself.");
 
 			foreach(var pair in Adjacencies)
 				if((r1.UniqueID == pair.Item1.UniqueID && r2.UniqueID == pair.Item2.UniqueID)
@@ -112,17 +115,57 @@ namespace RoomArrangement
 			return false;
 		}
 
-		public void AddRoom<T>(int x, int y) where T : Room => AddRoom<T>(null, Point.Origin, new Rectangle(x, y));
-		public void AddRoom<T>(string name, int x, int y) where T : Room => AddRoom<T>(name, Point.Origin, new Rectangle(x, y));
+		public void AddRoom<T>(int x, int y) where T : Room => AddRoom<T>(new Rectangle(x, y));
+		public void AddRoom<T>(Rectangle rec) where T : Room => AddRoom<T>(null, rec);
+		public void AddRoom<T>(string name, int x, int y) where T : Room => AddRoom<T>(name, new Rectangle(x, y));
+		public void AddRoom<T>(string name, Rectangle rec) where T : Room => AddRoom<T>(name, Point.Origin, rec);
 		public void AddRoom<T>(string name, Point pt, Rectangle rec) where T : Room
 		{
 			// If documentation of Activator class it to be believed,
 			// Should create an instance of T. As if it was // new T(name, pt, rec);
-			var room = (T)CreateInstance(typeof(T), name, pt, rec);
-			if(typeof(T) == typeof(Corridor))
-				CorridorExists = true;
-
+			var room = (T)Activator.CreateInstance(typeof(T), name, pt, rec);
 			Add(room);
+		}
+
+		void ReadProgram(BldgProgram bldgProgram)
+		{
+			// Kitchens
+			if(bldgProgram.KitchensCount == 1)
+				AddRoom<Kitchen>(bldgProgram.KitchenSpace);
+			else if(bldgProgram.KitchensCount == 2)
+			{
+				AddRoom<Kitchen>("Clean", bldgProgram.KitchenSpace);
+				AddRoom<Kitchen>("Dirty", bldgProgram.KitchenSpace);
+			}
+			else
+				throw new InvalidOperationException("This should never happen");
+
+			// LivingRooms
+			string[] LvTypes = { "Main", "Dining", "Reception", "Library", "Other" };
+
+			for(int i = 0; i < bldgProgram.LivingRoomsCount; i++)
+			{
+				var name = i < LvTypes.Length ? LvTypes[i] : LvTypes.Last();
+				AddRoom<LivingRoom>(name, bldgProgram.LivingRoomSpace);
+			}
+
+			// Bedrooms
+			for(int i = 0; i < bldgProgram.BedroomOddCount; i++)
+				AddRoom<Bedroom>("Older Kids", bldgProgram.BedroomOddSpaces[i]);
+
+			for(int i = 0; i < bldgProgram.BedroomTypCount; i++)
+				AddRoom<Bedroom>(bldgProgram.BedroomTypSpaces[i]);
+
+			string[] BrTypes = { "Parents", "GParents", "Second GParents" };
+			for(int i = 0; i < bldgProgram.BedroomCouplesCount; i++)
+				AddRoom<Bedroom>(BrTypes[i], bldgProgram.BedroomCouplesSpaces[i]);
+
+			if(bldgProgram.TotalNumberOfBedrooms >= 5)
+			{
+				AddRoom<Corridor>("Bedrooms", 3 * bldgProgram.TotalNumberOfBedrooms, 1);
+				CorridorExists = true;
+			}
+			// This is so bad
 		}
 
 		// TODO Needs rework
