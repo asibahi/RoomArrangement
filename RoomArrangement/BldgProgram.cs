@@ -1,12 +1,14 @@
-﻿using System.Linq;
-using static System.Math;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using static System.Math;
 
 namespace RoomArrangement
 {
 	class BldgProgram
 	{
+		#region Quantitive Data
 		int sons;
 		int dtrs;
 		int parents;
@@ -23,8 +25,8 @@ namespace RoomArrangement
 		// Kitchen Data
 		public double KitchenArea { get; private set; }
 		public Rectangle KitchenSpace { get; private set; }
-		public int KitchensCount { get; private set; }
-		public double KitchensTotalArea => KitchenArea * KitchensCount;
+		public int KitchenCount { get; private set; }
+		public double KitchensTotalArea => KitchenArea * KitchenCount;
 
 		// Living Room Data
 		public double LivingRoomArea => LivingRoomsTotalArea / LivingRoomsCount;
@@ -44,12 +46,26 @@ namespace RoomArrangement
 
 		public List<double> BedroomCouplesAreas { get; private set; } = new List<double>();
 		public List<Rectangle> BedroomCouplesSpaces { get; private set; } = new List<Rectangle>();
-
 		public int BedroomCouplesCount => BedroomCouplesSpaces.Count;
-
 
 		public double TotalBedroomsArea => (BedroomTypicalAreas.Sum() + BedroomOddAreas.Sum() + BedroomCouplesAreas.Sum());
 		public int TotalNumberOfBedrooms => (BedroomTypCount + BedroomOddCount + BedroomCouplesCount);
+		#endregion
+
+		// Another placeholder for a proper Criteria class TODO
+		// Adjacency matrix mockup
+		//
+		//		Bedroom		Kitchen		LivingRoom
+		// LivingRoom	Aye		Aye		-
+		// Kitchen	Nay		-	
+		// Bedroom	-
+		// 
+		// So any bedroom connected to any Living room?
+		// I need Living Room Types !!
+		//
+		// Same for kitchens.
+		//
+		// How would I even begin to do this?
 
 		// Constructor and main calulcations
 		public BldgProgram(Input input)
@@ -68,19 +84,6 @@ namespace RoomArrangement
 			CalcKidsBedrooms(dtrs);
 
 			CalcCouplesBedrooms();
-
-			// Set adjacencies.
-			// Adjacency Schedule Mockup
-			//
-			//		Bedroom		Kitchen		LivingRoom
-			// LivingRoom	Aye		Aye		-
-			// Kitchen	Nay		-	
-			// Bedroom	-
-			// 
-			// So any bedroom connected to any Living room?
-			// I need Living Room Types !!
-			//
-			// Same for kitchens.
 		}
 
 		void CalcKitchensAndLivingRooms()
@@ -92,12 +95,12 @@ namespace RoomArrangement
 			if(resFactor < DimsForKitchens.Count())
 			{
 				KitchenArea = DimsForKitchens[resFactor] * 12;
-				KitchensCount = 1;
+				KitchenCount = 1;
 			}
 			else
 			{
 				KitchenArea = DimsForKitchens.Last() * 12;
-				KitchensCount = 2;
+				KitchenCount = 2;
 			}
 
 			// Living Rooms areas dependant on Kitchens.
