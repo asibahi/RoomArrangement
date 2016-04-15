@@ -6,24 +6,21 @@ namespace RoomArrangement
 	{
 		static void Main(string[] args)
 		{
-			// Create the Rooms
-			var NumOfRooms = 3;
+			var input = new Input();
 
-			for (int i = 0; i < NumOfRooms; i++)
-			{
-				var r = new Room();
-			}
+			// Ask for Input here
 
-			// This is just to test the code with three rooms
-			Database.PairRooms(0, 1);
-			Database.PairRooms(0, 2);
-			Database.PairRooms(1, 2);
+			var bldgProgram = new BldgProgram(input);
+			var house = new House(input, bldgProgram);
 
-			GACompanions.RunGA(NumOfRooms);
+			house.RunThrowAndStick();
+			house.RunPushPull();
 
+			foreach(Room r in house)
+				Console.WriteLine($"{r.Name}'s coordinates are {r.Anchor}. Its dimensions are {r.Space}");
+
+			house.Draw();
 			Console.ReadKey();
 		}
-
-
 	}
 }
