@@ -51,13 +51,23 @@
   <ItemGroup>
     <Compile Include="Algorithms\PushPull.cs" />
     <Compile Include="BldgProgram.cs" />
+    <Compile Include="MyGraph\Graph.cs" />
+    <Compile Include="MyGraph\Node.cs" />
     <Compile Include="House.cs" />
+    <Compile Include="MyGraph\NodeList.cs" />
+    <Compile Include="RoomTypes\Bathroom.cs" />
     <Compile Include="RoomTypes\Bedroom.cs" />
     <Compile Include="Enums.cs" />
+    <Compile Include="RoomTypes\DiningRoom.cs" />
+    <Compile Include="RoomTypes\IWet.cs" />
     <Compile Include="RoomTypes\Kitchen.cs" />
+    <Compile Include="RoomTypes\Library.cs" />
     <Compile Include="RoomTypes\LivingRoom.cs" />
     <Compile Include="RoomTypes\Corridor.cs" />
     <Compile Include="Input.cs" />
+    <Compile Include="RoomTypes\MainRoom.cs" />
+    <Compile Include="RoomTypes\Office.cs" />
+    <Compile Include="RoomTypes\Reception.cs" />
     <Compile Include="Structs\Vector.cs" />
     <Compile Include="Structs\Rectangle.cs" />
     <Compile Include="Algorithms\ThrowAndStick.cs" />

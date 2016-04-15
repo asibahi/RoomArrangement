@@ -42,7 +42,7 @@ namespace RoomArrangement
 			// This is way too buggy. What if one living Room? what if two Living Rooms and two kitchens?
 			// Bedrooms can get fucked.
 			// Left here as a proof of concept
-			for(int i = 0; i < bldgProgram.LivingRoomsCount; i++)
+			for(int i = 0; i < bldgProgram.LivingRoomCount; i++)
 			{
 				var lv = GetRooms<LivingRoom>()[i];
 				if(i < bldgProgram.KitchenCount)
@@ -81,7 +81,7 @@ namespace RoomArrangement
 			// LivingRooms
 			string[] LvTypes = { "Main", "Dining", "Reception", "Library", "Other" };
 
-			for(int i = 0; i < bldgProgram.LivingRoomsCount; i++)
+			for(int i = 0; i < bldgProgram.LivingRoomCount; i++)
 			{
 				var name = i < LvTypes.Length ? LvTypes[i] : LvTypes.Last();
 				AddRoom<LivingRoom>(name, bldgProgram.LivingRoomSpace);
@@ -98,9 +98,9 @@ namespace RoomArrangement
 			for(int i = 0; i < bldgProgram.BedroomCouplesCount; i++)
 				AddRoom<Bedroom>(BrTypes[i], bldgProgram.BedroomCouplesSpaces[i]);
 
-			if(bldgProgram.TotalNumberOfBedrooms >= 5)
+			if(bldgProgram.BedroomTotalCount >= 5)
 			{
-				AddRoom<Corridor>("Bedrooms", 3 * bldgProgram.TotalNumberOfBedrooms, 1);
+				AddRoom<Corridor>("Bedrooms", 3 * bldgProgram.BedroomTotalCount, 1);
 				CorridorExists = true;
 			}
 			// This is so bad

@@ -1,6 +1,6 @@
 ﻿namespace RoomArrangement
 {
-	class Kitchen : Room
+	class Kitchen : Room, IWet
 	{
 		readonly int kitchenID;
 		override public string Name => $"Kitchen {kitchenID}" + (string.IsNullOrEmpty(name) ? "" : $" : {name}");

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using static System.Math;
 
@@ -29,10 +27,10 @@ namespace RoomArrangement
 		public double KitchensTotalArea => KitchenArea * KitchenCount;
 
 		// Living Room Data
-		public double LivingRoomArea => LivingRoomsTotalArea / LivingRoomsCount;
+		public double LivingRoomArea => LivingRoomTotalArea / LivingRoomCount;
 		public Rectangle LivingRoomSpace { get; private set; }
-		public int LivingRoomsCount { get; private set; }
-		public double LivingRoomsTotalArea { get; private set; }
+		public int LivingRoomCount { get; private set; }
+		public double LivingRoomTotalArea { get; private set; }
 
 		// Bedroom Data
 		public List<double> BedroomTypicalAreas { get; private set; } = new List<double>();
@@ -48,9 +46,15 @@ namespace RoomArrangement
 		public List<Rectangle> BedroomCouplesSpaces { get; private set; } = new List<Rectangle>();
 		public int BedroomCouplesCount => BedroomCouplesSpaces.Count;
 
-		public double TotalBedroomsArea => (BedroomTypicalAreas.Sum() + BedroomOddAreas.Sum() + BedroomCouplesAreas.Sum());
-		public int TotalNumberOfBedrooms => (BedroomTypCount + BedroomOddCount + BedroomCouplesCount);
+		public double BedroomTotalArea => (BedroomTypicalAreas.Sum() + BedroomOddAreas.Sum() + BedroomCouplesAreas.Sum());
+		public int BedroomTotalCount => (BedroomTypCount + BedroomOddCount + BedroomCouplesCount);
+
+		public int RoomTotalCount => KitchenCount + LivingRoomCount + BedroomTotalCount;
 		#endregion
+
+		// Qualitative Data
+
+		//public int[,] Adjacencies { get; private set; }
 
 		// Another placeholder for a proper Criteria class TODO
 		// Adjacency matrix mockup
@@ -84,6 +88,8 @@ namespace RoomArrangement
 			CalcKidsBedrooms(dtrs);
 
 			CalcCouplesBedrooms();
+
+			//Adjacencies = new int[RoomTotalCount, RoomTotalCount];
 		}
 
 		void CalcKitchensAndLivingRooms()
@@ -108,19 +114,19 @@ namespace RoomArrangement
 			if(totalResidents <= 4)
 			{
 				resFactor = (int)(totalResidents - 1);
-				LivingRoomsTotalArea = DefaultLivingRoomAreas[resFactor] - KitchensTotalArea;
+				LivingRoomTotalArea = DefaultLivingRoomAreas[resFactor] - KitchensTotalArea;
 			}
 			else
 			{
 				resFactor = (int)((totalResidents - 4) * 100);
-				LivingRoomsTotalArea = resFactor + 900 - KitchensTotalArea;
+				LivingRoomTotalArea = resFactor + 900 - KitchensTotalArea;
 			}
 
 			// These calcs are such a hack ........... wtf
 			// However the intent is somewhat readable this way
-			LivingRoomsCount = (int)Ceiling(LivingRoomsTotalArea / baseLivingRoomArea);
+			LivingRoomCount = (int)Ceiling(LivingRoomTotalArea / baseLivingRoomArea);
 
-			var actualArea = LivingRoomsTotalArea / LivingRoomsCount;
+			var actualArea = LivingRoomTotalArea / LivingRoomCount;
 			var otherLRDim = actualArea / 12;
 			var dimRoundedToGrid = (int)Ceiling(otherLRDim / 4);
 
