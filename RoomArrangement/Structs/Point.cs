@@ -36,7 +36,7 @@
 		public override int GetHashCode() => X.GetHashCode() ^ (7 * Y.GetHashCode());
 
 		// Negation
-		public static Point operator !(Point p) => new Point(0 - p.X, 0 - p.Y);
+		public static Point operator -(Point p) => new Point(0 - p.X, 0 - p.Y);
 		#endregion
 	}
 }
