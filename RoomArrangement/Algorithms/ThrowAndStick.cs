@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using GAF;
 using GAF.Operators;
-using static System.Math;
+using static System.Console;
 using static System.Convert;
+using static System.Math;
 
 namespace RoomArrangement
 {
@@ -33,7 +33,7 @@ namespace RoomArrangement
 			ga.OnRunComplete += (sender, e) => ga_OnRunComplete(sender, e, house);
 
 			// Run the GA 
-			Console.WriteLine("Starting the GA");
+			WriteLine("Starting the GA");
 			ga.Run(Terminate);
 		}
 
@@ -95,13 +95,10 @@ namespace RoomArrangement
 				if(house.AreAdjacent(ri, rj))
 					if((xDim == 0 && yDim < 0) || (xDim < 0 && yDim == 0))
 						returnVal = 1;
-
 					else if(xDim == 0 && yDim == 0)
 						returnVal = BellCurve(1);
-
 					else if((xDim > 0 && yDim < 0) || (xDim < 0 && yDim > 0))
 						returnVal = BellCurve(Max(xDim, yDim));
-
 					else
 						returnVal = BellCurve(xDim) * BellCurve(yDim);
 
@@ -151,7 +148,7 @@ namespace RoomArrangement
 		static void ga_OnGenerationComplete(object sender, GaEventArgs e)
 		{
 			var c = e.Population.GetTop(1)[0];
-			Console.WriteLine($"Fitness is {c.Fitness}");
+			WriteLine($"Fitness is {c.Fitness}");
 		}
 
 		static void ga_OnRunComplete(object sender, GaEventArgs e, House house)
@@ -159,8 +156,8 @@ namespace RoomArrangement
 			var c = e.Population.GetTop(1)[0];
 			ReadChromosome(c, house);
 
-			Console.WriteLine("The GA is Done");
-			Console.WriteLine($"Fitness is {c.Fitness}");
+			WriteLine("The GA is Done");
+			WriteLine($"Fitness is {c.Fitness}");
 		}
 	}
 }
