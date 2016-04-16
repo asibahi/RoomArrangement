@@ -20,16 +20,7 @@ namespace RoomArrangement
 		public Rectangle Space { get; private set; }
 		public Point Anchor { get; private set; }
 		public char Orientation => Space.XDim == Space.YDim ? 'O' : (Space.XDim > Space.YDim ? 'X' : 'Y');
-		public Point Center
-		{
-			get
-			{
-				var pt = new Point(Anchor);
-				pt.X += Space.XDim / 2;
-				pt.Y += Space.YDim / 2;
-				return pt;
-			}
-		}
+		public Point Center => Anchor + new Point(Space.XDim / 2, Space.YDim / 2); 
 
 		// Constructor
 		protected Room(string n, Point pt, Rectangle rec)

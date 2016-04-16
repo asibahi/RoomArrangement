@@ -3,10 +3,10 @@
 	// Replicating shit from the Rhino SDK for my purposes
 	struct Rectangle
 	{
-		public int XDim { get; set; }
-		public int YDim { get; set; } 
+		public double XDim { get; set; }
+		public double YDim { get; set; } 
 
-		public Rectangle(int x, int y)
+		public Rectangle(double x, double y)
 		{
 			XDim = x;
 			YDim = y;
@@ -18,8 +18,8 @@
 			YDim = r.YDim;
 		}
 
-		public int Area => XDim * YDim;
-		public int Circumfrance => 2 * XDim + 2 * YDim;
+		public double Area => XDim * YDim;
+		public double Circumfrance => 2 * XDim + 2 * YDim;
 
 		public override string ToString() => $"[{XDim}, {YDim}]";
 	}

@@ -3,10 +3,10 @@
 	// Replicating shit from the Rhino SDK for my purposes
 	struct Point
 	{
-		public int X { get; set; }
-		public int Y { get; set; }
+		public double X { get; set; }
+		public double Y { get; set; }
 
-		public Point(int x, int y)
+		public Point(double x, double y)
 		{
 			X = x;
 			Y = y;
@@ -33,7 +33,7 @@
 
 		public bool Equals(Point p) => (X == p.X) && (Y == p.Y);
 		public override bool Equals(object obj) => obj is Point && this == (Point)obj;
-		public override int GetHashCode() => X ^ (7 * Y);
+		public override int GetHashCode() => X.GetHashCode() ^ (7 * Y.GetHashCode());
 
 		// Negation
 		public static Point operator !(Point p) => new Point(0 - p.X, 0 - p.Y);

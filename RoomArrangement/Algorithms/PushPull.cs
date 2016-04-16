@@ -117,14 +117,11 @@ namespace RoomArrangement
 
 				var tV = new Vector(xDir * xDim * xOn, yDir * yDim * yOn);
 
-				bool riStillIn = IsStillIn(ri, tV, boundary);
-				bool rjStillIn = IsStillIn(rj, tV, boundary);
-
 				// Checking for boundary. Should be improved by having the room go sideways.
 				// Needs to be tested
-				if(riStillIn)
+				if(IsStillIn(ri, tV, boundary))
 					ri.Move(tV / 2);
-				if(rjStillIn)
+				if(IsStillIn(rj, tV, boundary))
 					rj.Move(-tV / 2);
 			}
 			else

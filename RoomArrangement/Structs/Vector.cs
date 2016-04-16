@@ -8,14 +8,6 @@ namespace RoomArrangement
 		public double X { get; set; }
 		public double Y { get; set; }
 
-		// Use Doubles instead of Ints so for more precision and stuff
-		// We'll see how that plays out when implementing a Move method.
-		public Vector(int x, int y)
-		{
-			X = x;
-			Y = y;
-		}
-
 		public Vector(double x, double y)
 		{
 			X = x;
