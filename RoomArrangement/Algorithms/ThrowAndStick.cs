@@ -4,6 +4,7 @@ using System.Linq;
 using GAF;
 using GAF.Operators;
 using static System.Math;
+using static System.Convert;
 
 namespace RoomArrangement
 {
@@ -12,7 +13,7 @@ namespace RoomArrangement
 		// Using Genetic Algorithms
 		public static void RunThrowAndStick(this House house)
 		{
-			var population = new Population(100, 9 * house.Count, false, false);
+			var population = new Population(100, 17 * house.Count, false, false);
 
 			//create the genetic operators 
 			var elite = new Elite(5);
@@ -20,7 +21,7 @@ namespace RoomArrangement
 			var mutation = new BinaryMutate(0.08, true);
 
 			//create the GA itself 
-			var ga = new GeneticAlgorithm(population, chromosome => EvaluateFitness(chromosome, house)); // Of course Lambda funcs return a delegate ...
+			var ga = new GeneticAlgorithm(population, chromosome => EvaluateFitness(chromosome, house));
 
 			//add the operators to the ga process pipeline 
 			ga.Operators.Add(elite);
@@ -36,7 +37,7 @@ namespace RoomArrangement
 			ga.Run(Terminate);
 		}
 
-		public static double EvaluateFitness(Chromosome c, House house)
+		static double EvaluateFitness(Chromosome c, House house)
 		{
 			var fitnessList = new List<double>();
 
@@ -52,13 +53,13 @@ namespace RoomArrangement
 			{
 				var xFarthest = r.Anchor.X + r.Space.XDim - house.Boundary.XDim;
 				if(xFarthest > 0)
-					fitnessList.Add(Pow(GaussianFunc(xFarthest), 2));
+					fitnessList.Add(Pow(BellCurve(xFarthest), 2));
 				else
 					fitnessList.Add(1);
 
 				var yFarthest = r.Anchor.Y + r.Space.YDim - house.Boundary.YDim;
 				if(yFarthest > 0)
-					fitnessList.Add(Pow(GaussianFunc(yFarthest), 2));
+					fitnessList.Add(Pow(BellCurve(yFarthest), 2));
 				else
 					fitnessList.Add(1);
 			}
@@ -68,7 +69,7 @@ namespace RoomArrangement
 			return fitnessList.Aggregate((x, y) => x * y);
 		}
 
-		public static bool Terminate(Population population,
+		static bool Terminate(Population population,
 						int currentGeneration,
 						long currentEvaluation) => (population.MaximumFitness == 1);
 
@@ -96,66 +97,54 @@ namespace RoomArrangement
 						returnVal = 1;
 
 					else if(xDim == 0 && yDim == 0)
-						returnVal = GaussianFunc(1);
+						returnVal = BellCurve(1);
 
 					else if((xDim > 0 && yDim < 0) || (xDim < 0 && yDim > 0))
-						returnVal = GaussianFunc(Max(xDim, yDim));
+						returnVal = BellCurve(Max(xDim, yDim));
 
 					else
-						returnVal = GaussianFunc(xDim) * GaussianFunc(yDim);
+						returnVal = BellCurve(xDim) * BellCurve(yDim);
 
 				else if(xDim < 0 && yDim < 0)
 					// Intersection logic 
-					returnVal = GaussianFunc(xDim) * GaussianFunc(yDim);
+					returnVal = BellCurve(xDim) * BellCurve(yDim);
 			}
 			return returnVal;
 		}
 
 		static void ReadChromosome(Chromosome c, House house)
 		{
-			// Assuming each chromosome represents a certain arrangmenet of THREE rooms
-			// The chrome will have, for each room:
-			// 4 bits for X location , 4 bits for Y location , 1 bit for Orientation
+			// Each chromosome represents a certain arrangmenet of rooms
+			// a chromosome will have 17 bits total for each room:
+			// 8 bits for X location , 8 bits for Y location , 1 bit for Orientation
+			// A loop through the chromose would adjust the rooms accordingly.
 			//
-			// Since we have three rooms for the proof of concept, each chromosome
-			// will be 27 bits long. TWENTY SEVEN
-			//
-			// Each 9 bits is one room. A loop through the chromose should do it.
-			//
-			// Example Chromosome:	000100101001101010110101101
-			// First Room:		000100101
-			// Second Room:		001101010
-			// Third Room:		110101101
+			// Example with 9 bits instead of 17, but same idea:
+			// Chromosome:		000100101_001101010_110101101
+			// First Room:		0001_0010_1
+			// Second Room:		0011_0101_0
+			// Third Room:		1101_0110_1
 
 			// Adjusting the Rooms
-			for(int i = 0; i < c.Count; i += 9)
+			for(int i = 0; i < c.Count; i += 17)
 			{
-				int x = Convert.ToInt32(c.ToBinaryString(i, 4), 2);
-				int y = Convert.ToInt32(c.ToBinaryString(i + 4, 4), 2);
-				int oTemp = Convert.ToInt32(c.ToBinaryString(i + 8, 1), 2);
+				int x = ToInt32(c.ToBinaryString(i, 8), 2);
+				int y = ToInt32(c.ToBinaryString(i + 8, 8), 2);
+				int oTemp = ToInt32(c.ToBinaryString(i + 16, 1), 2);
 
-				bool o = Convert.ToBoolean(oTemp);
+				bool o = ToBoolean(oTemp);
 
-				var j = i / 9;
-
-				house[j].Adjust(x, y, o);
+				house[i / 17].Adjust(x, y, o);
 			}
 		}
 
-		// Implementing the Gaussian Function (bell curve) when
-		// a (peak)     = 1
-		// b (center)   = 0
-		// c (width)    = 1 because what the hell. It is the only thing that could/should be changed.
-		// Check https://en.wikipedia.org/wiki/Gaussian_function and
-		// http://www.wolframalpha.com/input/?i=f%5Cleft(x%5Cright)+%3D+e%5E%7B-+%7B+%5Cfrac%7B(x)%5E2+%7D%7B+2+*+1%5E2%7D+%7D+%7D
-		// for details
-		static double GaussianFunc(double x)
+		static double BellCurve(double x)
 		{
-			double a = 1;
-			double b = 0;
-			double c = 1;
+			var a = 1; // peak value
+			var b = 0; // center on x-axis
+			var c = 1; // width of bell curve
 
-			return (a * Pow(E, -(Pow((x - b), 2) / (2 * Pow(c, 2)))));
+			return (a * Pow(E, -(Pow((x - b), 2) / (2 * Pow(c, 2))))); // Gaussian Function
 		}
 
 		// Events subscription

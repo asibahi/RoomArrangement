@@ -3,7 +3,7 @@ using static System.Math;
 
 namespace RoomArrangement
 {
-	abstract class Room
+	abstract class Room : IEquatable<Room>
 	{
 		// Meta properties
 		readonly int numericID;
@@ -72,5 +72,15 @@ namespace RoomArrangement
 			cntX = Center.X;
 			cntY = Center.Y;
 		}
+
+		// Equality
+		public static bool operator ==(Room r1, Room r2) => r1.Equals(r2);
+		public static bool operator !=(Room r1, Room r2) => !r1.Equals(r2);
+
+		public bool Equals(Room other) => UniqueID == other.UniqueID;
+		public override bool Equals(object obj) => obj is Room && this == (Room)obj;
+		public override int GetHashCode() => UniqueID.GetHashCode();
+
+		public override string ToString() => $"{Name} at {Anchor} with size {Space}.";
 	}
 }

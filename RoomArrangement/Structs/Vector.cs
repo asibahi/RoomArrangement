@@ -51,18 +51,16 @@ namespace RoomArrangement
 		public static Vector operator *(Vector v, double d) => new Vector(v.X * d, v.Y * d);
 		public static Vector operator /(Vector v, double d) => new Vector(v.X / d, v.Y / d);
 
-
 		// Equality
-		public static bool operator ==(Vector v1, Vector v2) => v1.X == v2.X && v1.Y == v2.Y;
-		public static bool operator !=(Vector v1, Vector v2) => !(v1.X == v2.X && v1.Y == v2.Y);
+		public static bool operator ==(Vector v1, Vector v2) => v1.Equals(v2);
+		public static bool operator !=(Vector v1, Vector v2) => !v1.Equals(v2);
 
+		public bool Equals(Vector v) => (X == v.X) && (Y == v.Y);
 		public override bool Equals(object obj) => obj is Vector && this == (Vector)obj;
-		public bool Equals(Vector v) => ((X == v.X) && (Y == v.Y));
 		public override int GetHashCode() => X.GetHashCode() ^ (13 * Y.GetHashCode());
 
 		// Negation
 		public static Vector operator -(Vector v) => new Vector(-v.X, -v.Y);
 		#endregion
-
 	}
 }

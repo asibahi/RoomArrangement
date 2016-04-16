@@ -20,22 +20,16 @@ namespace RoomArrangement
 
 				// Go Through the rooms in sequence and move them away from each other.
 				for(int i = 0; i < house.Count; i++)
-				{
-					var ri = house[i];
 					for(int j = i + 1; j < house.Count; j++)
-					{
-						var rj = house[j];
-						resolvedCount = PushOrAddCount(resolvedCount, ri, rj, house.Boundary);
-					}
-				}
-
+						resolvedCount = PushOrAddCount(resolvedCount, house[i], house[j], house.Boundary);
+		
 				if(++hardCount >= hardLim)
 					break;
 			}
 			while(resolvedCount <= totalRoomPairs);
 		}
 
-		private static void Pull(Room r1, Room r2)
+		static void Pull(Room r1, Room r2)
 		{
 			#region Switching Switches
 			double xRec1, yRec1, xCnt1, yCnt1;
@@ -75,7 +69,6 @@ namespace RoomArrangement
 					yAlign = 1;
 				else
 					xAlign = 1;
-
 			#endregion
 
 			if(xDim != 0 && yDim != 0)
@@ -89,7 +82,7 @@ namespace RoomArrangement
 			}
 		}
 
-		private static int PushOrAddCount(int resolvedCount, Room ri, Room rj, Rectangle boundary)
+		static int PushOrAddCount(int resolvedCount, Room ri, Room rj, Rectangle boundary)
 		{
 			#region Switching Switches
 			double xRec1, yRec1, xCnt1, yCnt1;
@@ -122,10 +115,7 @@ namespace RoomArrangement
 			{
 				resolvedCount = 0;
 
-				var tVx = xDir * xDim * xOn;
-				var tVy = yDir * yDim * yOn;
-
-				var tV = new Vector(tVx, tVy);
+				var tV = new Vector(xDir * xDim * xOn, yDir * yDim * yOn);
 
 				bool riStillIn = IsStillIn(ri, tV, boundary);
 				bool rjStillIn = IsStillIn(rj, tV, boundary);
