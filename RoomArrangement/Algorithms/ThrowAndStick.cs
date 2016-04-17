@@ -8,7 +8,7 @@ using static System.Math;
 
 namespace RoomArrangement
 {
-	static class ThrowAndStick
+	public static class ThrowAndStick
 	{
 		// Using Genetic Algorithms
 		public static void RunThrowAndStick(this House house)

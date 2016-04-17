@@ -1,6 +1,6 @@
 ﻿namespace RoomArrangement
 {
-	interface IWet
+	public interface IWet
 	{
 	}
 }

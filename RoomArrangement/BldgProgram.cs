@@ -4,9 +4,8 @@ using static System.Math;
 
 namespace RoomArrangement
 {
-	class BldgProgram
+	public class BldgProgram
 	{
-		#region Quantitive Data
 		int sons;
 		int dtrs;
 		int parents;
@@ -50,11 +49,10 @@ namespace RoomArrangement
 		public int BedroomTotalCount => (BedroomTypCount + BedroomOddCount + BedroomCouplesCount);
 
 		public int RoomTotalCount => KitchenCount + LivingRoomCount + BedroomTotalCount;
-		#endregion
 
 		// Qualitative Data
 
-		//public int[,] Adjacencies { get; private set; }
+		public int[,] Adjacencies { get; private set; }
 
 		// Another placeholder for a proper Criteria class TODO
 		// Adjacency matrix mockup
@@ -89,7 +87,7 @@ namespace RoomArrangement
 
 			CalcCouplesBedrooms();
 
-			//Adjacencies = new int[RoomTotalCount, RoomTotalCount];
+			Adjacencies = new int[RoomTotalCount, RoomTotalCount];
 		}
 
 		void CalcKitchensAndLivingRooms()

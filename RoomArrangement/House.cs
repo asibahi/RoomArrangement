@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace RoomArrangement
 {
-	class House : IList<Room>
+	public class House : IList<Room>
 	{
 		// Fields and Properties
 		readonly List<Room> mainList;

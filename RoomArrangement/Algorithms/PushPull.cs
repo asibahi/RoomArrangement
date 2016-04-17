@@ -3,7 +3,7 @@ using static System.Math;
 
 namespace RoomArrangement
 {
-	static class PushPull
+	public static class PushPull
 	{
 		public static void RunPushPull(this House house)
 		{

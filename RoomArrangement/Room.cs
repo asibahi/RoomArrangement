@@ -3,7 +3,7 @@ using static System.Math;
 
 namespace RoomArrangement
 {
-	abstract class Room : IEquatable<Room>
+	public abstract class Room : IEquatable<Room>
 	{
 		// Meta properties
 		readonly int numericID;
@@ -14,6 +14,8 @@ namespace RoomArrangement
 		abstract public string Name { get; }
 		public Guid UniqueID => uniqueID;
 		static int TotalRoomCount { get; set; }
+
+		protected abstract bool Flexible { get; }
 
 		// Geometric properties
 		// Note the Anchor here is supposed to be the SW Corner.
@@ -64,6 +66,8 @@ namespace RoomArrangement
 			cntY = Center.Y;
 		}
 
+		public bool IsFlexible() => Flexible;
+
 		// Equality
 		public static bool operator ==(Room r1, Room r2) => r1.Equals(r2);
 		public static bool operator !=(Room r1, Room r2) => !r1.Equals(r2);
@@ -73,5 +77,7 @@ namespace RoomArrangement
 		public override int GetHashCode() => UniqueID.GetHashCode();
 
 		public override string ToString() => $"{Name} at {Anchor} with size {Space}.";
+
+		
 	}
 }

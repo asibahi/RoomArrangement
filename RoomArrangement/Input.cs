@@ -1,6 +1,6 @@
 ﻿namespace RoomArrangement
 {
-	class Input
+	public class Input
 	{
 		public int Sons { get; set; }
 		public int Daughters { get; set; }

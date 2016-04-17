@@ -1,7 +1,7 @@
 ﻿namespace RoomArrangement
 {
 	// Replicating shit from the Rhino SDK for my purposes
-	struct Rectangle
+	public struct Rectangle
 	{
 		public double XDim { get; set; }
 		public double YDim { get; set; } 
