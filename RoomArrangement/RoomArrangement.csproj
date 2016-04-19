@@ -51,7 +51,6 @@
   <ItemGroup>
     <Compile Include="Algorithms\PushPull.cs" />
     <Compile Include="BldgProgram.cs" />
-    <Compile Include="BldgProgramNew.cs" />
     <Compile Include="MyGraph\Graph.cs" />
     <Compile Include="MyGraph\Node.cs" />
     <Compile Include="House.cs" />
@@ -66,7 +65,6 @@
     <Compile Include="RoomTypes\LivingRoom.cs" />
     <Compile Include="RoomTypes\Corridor.cs" />
     <Compile Include="Input.cs" />
-    <Compile Include="RoomTypes\Root.cs" />
     <Compile Include="RoomTypes\Office.cs" />
     <Compile Include="RoomTypes\Reception.cs" />
     <Compile Include="Structs\Vector.cs" />

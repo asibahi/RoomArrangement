@@ -22,8 +22,11 @@ namespace RoomArrangement
 		public Rectangle Space { get; private set; }
 		public Point Anchor { get; private set; }
 		public char Orientation => Space.LargerSide;
-		public Point Center => Anchor + new Point(Space.XDim / 2, Space.YDim / 2); 
+		public Point Center => Anchor + new Point(Space.XDim / 2, Space.YDim / 2);
 		public double Area => Space.Area;
+
+		double SmallerSideSize => Min(Space.XDim, Space.YDim);
+		double LargerSideSize => Max(Space.XDim, Space.YDim);
 
 		// Constructor
 		protected Room(string n, Point pt, Rectangle rec)
@@ -65,7 +68,14 @@ namespace RoomArrangement
 			cntY = Center.Y;
 		}
 
-		public bool IsFlexible() => Flexible;
+		public void ExtendLength(double area)
+		{
+			if(!Flexible)
+				throw new InvalidOperationException("This room cannot be expanded.");
+
+			var length = Round(area / SmallerSideSize);
+			Space = Space.ExtendLargerBy(length);
+		}
 
 		// Equality
 		public static bool operator ==(Room r1, Room r2) => r1.Equals(r2);

@@ -4,7 +4,7 @@
 	public struct Rectangle
 	{
 		public double XDim { get; set; }
-		public double YDim { get; set; } 
+		public double YDim { get; set; }
 
 		public Rectangle(double x, double y)
 		{
@@ -24,9 +24,13 @@
 		public char SmallerSide => XDim == YDim ? 'O' : (XDim < YDim ? 'X' : 'Y');
 		public char LargerSide => XDim == YDim ? 'O' : (XDim > YDim ? 'X' : 'Y');
 
-		public static Rectangle ExpandLargerBy(Rectangle rec, int size) =>
-			rec.LargerSide == 'X' ? new Rectangle(rec.XDim + 1, rec.YDim)
-					      : new Rectangle(rec.XDim, rec.YDim + 1);
+		public Rectangle ExtendLargerBy(double length) =>
+			LargerSide == 'X' ? new Rectangle(XDim + length, YDim)
+					  : new Rectangle(XDim, YDim + length);
+
+		public Rectangle ExtendSmallerBy(double length) =>
+			SmallerSide == 'X' ? new Rectangle(XDim + length, YDim)
+					   : new Rectangle(XDim, YDim + length);
 
 		public static Rectangle Rotate(Rectangle rec) => new Rectangle(rec.YDim, rec.XDim);
 
