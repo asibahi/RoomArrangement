@@ -117,6 +117,91 @@ namespace RoomArrangement
 			#endregion
 
 			var desiredRooms = input.Rooms;
+			Room diningRoom;
+			
+			if(desiredRooms.HasFlag(InputRooms.DiningRoom)) // Sketch
+			{
+				int diningRoomSize = Function(totalResidents);
+				diningRoom = AddRoom("Dining", 12 / GridSize , diningRoomSize / (12 * GridSize));
+				publicPool -= diningRoom.Area;
+				
+				PairRooms(diningRoom, livingRoom);
+			}
+			else
+			{
+				int diningRoomSize = SmallerFunction(totalResidents);
+				livingRoom.Expand(diningRoom / 12); // This makes no sense. I might end up making a very long living room.
+				
+				diningRoom = livingRoom;
+			}
+			
+			#region Kitchen Creation TODO
+			int[] dimsForKitchens = { 8, 12, 16 }; // this part should be part of criteria
+
+			var resFactor = (int)(Ceiling(totalResidents / 2d) - 1);
+			var dirtyWanted = desiredRooms.HasFlag(InputRooms.DirtyKitchen);
+			var cleanWanted = desiredRooms.HasFlag(InputRooms.CleanKitchen);
+			
+			Room dirtyKitchen;
+			Room cleanKitchen;
+
+			if(dirtyWanted && cleanWanted)
+				if(resFactor < dimsForKitchens.Count())
+				{
+					KitchenPool += dimsForKitchens[resFactor] * 12; // the Dirty Kitchen
+					Kitchenette = true; // the clean kitchen
+				}
+				else
+				{
+					KitchenPool += dimsForKitchens[resFactor] * 12 * 2; // Both kitchens
+				}	
+
+			else if(dirtyWanted ^ cleanWanted) // XOR operator FTW
+				KitchenPool += dimsForKitchens[resFactor] * 12; // either kitchen
+			else
+				Kitchenette = true;
+			#endregion 
+			
+			#region Desired Rooms 
+			
+			// Ideally the code would cycle through those by the priority made by the client. or CRITERIA
+			// Check how many flags are satisfied. If the flags are more than a certain percentage: create a corridor/or private rooms hub, and connect the extra rooms to it.
+			// alternatively, if livingRoom has more than a certain number of connection, it is extended per extra connection.
+			
+			if(publicPool > 0 && desiredRooms.HasFlag(InputRooms.Reception))
+			{
+				int receptionHallArea = Function(totalResidents); // What would that be?
+				var reception = AddRoom<Reception>(12 / GridSize, receptionHallArea / (12 * GridSize) );
+				
+				PairRooms(main, reception);
+				
+				publicPool -= reception.Area;
+				
+				if(publicPool > receptionHallArea)
+				{
+					// new Reception Room for te other gender .. maybe?
+				}
+				else
+				{
+					reception.Extend(publicPool);
+					// There should be an entrypoint variable where I assign to the street in the end.
+				}
+			}
+			
+			if(privatePool > 0 && desiredRooms.HasFlag(InputRooms.Library))
+			{
+				
+			}
+			
+			// Go through rooms in desiredRooms. Check if privatePool has enough space.
+			// Library
+			// Office
+			// GameRoom
+			// w/e 
+			//
+			// Ideally the code would cycle through those by the priority made by the client.
+			
+			#endregion
 		}
 
 		#region IList Implementation
