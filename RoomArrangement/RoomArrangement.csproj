@@ -51,13 +51,14 @@
   <ItemGroup>
     <Compile Include="Algorithms\PushPull.cs" />
     <Compile Include="BldgProgram.cs" />
+    <Compile Include="CardinalDirections.cs" />
     <Compile Include="MyGraph\Graph.cs" />
     <Compile Include="MyGraph\Node.cs" />
     <Compile Include="House.cs" />
     <Compile Include="MyGraph\NodeList.cs" />
     <Compile Include="RoomTypes\Bathroom.cs" />
     <Compile Include="RoomTypes\Bedroom.cs" />
-    <Compile Include="Enums.cs" />
+    <Compile Include="InputRooms.cs" />
     <Compile Include="RoomTypes\DiningRoom.cs" />
     <Compile Include="RoomTypes\IWet.cs" />
     <Compile Include="RoomTypes\Kitchen.cs" />
