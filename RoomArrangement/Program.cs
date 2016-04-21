@@ -113,9 +113,9 @@ namespace RoomArrangement
 			house.RunPushPull();
 
 			foreach(Room r in house)
-				Console.WriteLine($"{r.Name}'s coordinates are {r.Anchor}. Its dimensions are {r.Space}");
+				Console.WriteLine(r.ToString());
 
-			house.Draw();
+			//house.Draw();
 			Console.ReadKey();
 		}
 	}

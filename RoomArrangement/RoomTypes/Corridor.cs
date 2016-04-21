@@ -5,7 +5,7 @@ namespace RoomArrangement
 	public class Corridor : Room
 	{
 		readonly int corridorID;
-		override public string Name => $"Corridor {corridorID}" + (string.IsNullOrEmpty(name) ? "" : $" : {name}");
+		override public string Name => $"Corridor{corridorID}" + (string.IsNullOrEmpty(name) ? "" : $":{name}");
 		static int CorridorCount { get; set; }
 
 		protected override bool Flexible => true;

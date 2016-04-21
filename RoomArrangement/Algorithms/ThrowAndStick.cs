@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using GAF;
 using GAF.Operators;
 using static System.Console;
@@ -18,7 +19,7 @@ namespace RoomArrangement
 			//create the genetic operators 
 			var elite = new Elite(5);
 			var crossover = new Crossover(0.85, true, CrossoverType.SinglePoint);
-			var mutation = new BinaryMutate(0.08, true);
+			var mutation = new BinaryMutate(0.2, true);
 
 			//create the GA itself 
 			var ga = new GeneticAlgorithm(population, chromosome => EvaluateFitness(chromosome, house));
@@ -53,25 +54,26 @@ namespace RoomArrangement
 			{
 				var xFarthest = r.Anchor.X + r.Space.XDim - house.Boundary.XDim;
 				if(xFarthest > 0)
-					fitnessList.Add(Pow(BellCurve(xFarthest), 2));
+					fitnessList.Add(Pow(BellCurve(xFarthest), 10));
 				else
 					fitnessList.Add(1);
 
 				var yFarthest = r.Anchor.Y + r.Space.YDim - house.Boundary.YDim;
 				if(yFarthest > 0)
-					fitnessList.Add(Pow(BellCurve(yFarthest), 2));
+					fitnessList.Add(Pow(BellCurve(yFarthest), 10));
 				else
 					fitnessList.Add(1);
 			}
 
 			fitnessList.Add(1);
 
-			return fitnessList.Aggregate((x, y) => x * y);
+			//return fitnessList.Aggregate((x, y) => x * y);
+			return fitnessList.Average();
 		}
 
 		static bool Terminate(Population population,
 						int currentGeneration,
-						long currentEvaluation) => (population.MaximumFitness == 1);
+						long currentEvaluation) => (population.MaximumFitness == 1) || currentGeneration == 5000;
 
 		// It should compare whether two rooms intersect and if they are related, how far they are.
 		static double CompareRooms(int i, int j, House house)
@@ -139,16 +141,21 @@ namespace RoomArrangement
 		{
 			var a = 1; // peak value
 			var b = 0; // center on x-axis
-			var c = 12; // width of bell curve
+			var c = 100; // width of bell curve
 
 			return (a * Pow(E, -(Pow((x - b), 2) / (2 * Pow(c, 2))))); // Gaussian Function
 		}
 
 		// Events subscription
+		static double cMax;
 		static void ga_OnGenerationComplete(object sender, GaEventArgs e)
 		{
 			var c = e.Population.GetTop(1)[0];
-			WriteLine($"Fitness is {c.Fitness}");
+			if(c.Fitness > cMax)
+			{
+				cMax = c.Fitness;
+				WriteLine($"Fitness is {cMax}");
+			}
 		}
 
 		static void ga_OnRunComplete(object sender, GaEventArgs e, House house)

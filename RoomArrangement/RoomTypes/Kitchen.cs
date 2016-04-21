@@ -3,7 +3,7 @@
 	public class Kitchen : Room, IWet
 	{
 		readonly int kitchenID;
-		override public string Name => $"Kitchen {kitchenID}" + (string.IsNullOrEmpty(name) ? "" : $" : {name}");
+		override public string Name => $"Kitchen{kitchenID}" + (string.IsNullOrEmpty(name) ? "" : $":{name}");
 		static int KitchenCount { get; set; }
 
 		protected override bool Flexible => false;

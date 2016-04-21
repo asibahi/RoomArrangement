@@ -3,7 +3,7 @@
 	public class Office : Room
 	{
 		readonly int officeID;
-		override public string Name => $"Office {officeID}" + (string.IsNullOrEmpty(name) ? "" : $" : {name}");
+		override public string Name => $"Office{officeID}" + (string.IsNullOrEmpty(name) ? "" : $":{name}");
 		static int OfficeCount { get; set; }
 
 		protected override bool Flexible => false;

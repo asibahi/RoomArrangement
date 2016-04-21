@@ -3,7 +3,7 @@
 	public class Bedroom : Room
 	{
 		readonly int bedroomID;
-		override public string Name => $"Bedroom {bedroomID}" + (string.IsNullOrEmpty(name) ? "" : $" : {name}");
+		override public string Name => $"Bedroom{bedroomID}" + (string.IsNullOrEmpty(name) ? "": $":{name}");
 		static int BedroomCount { get; set; }
 
 		protected override bool Flexible => false;
