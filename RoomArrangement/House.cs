@@ -72,7 +72,10 @@ namespace RoomArrangement
 			Room bedroomHub;
 
 			if(bedroomCount > 1)
+			{
 				bedroomHub = AddRoom<Corridor>("Bedroom Corridor", 4 / GridSize, ((bedroomCount * 6) + 6) / GridSize);
+				PairRooms(bedroomHub, livingRoom);
+			}
 			else
 				bedroomHub = livingRoom;
 
@@ -136,12 +139,15 @@ namespace RoomArrangement
 				diningRoom = livingRoom;
 			}
 
-			#region Kitchen Creation TODO
+			#region Kitchen Creation
 			int[] dimsForKitchens = { 8, 12, 16 }; // this part should be part of criteria
 
 			var resFactor = (int)(Ceiling(input.Total / 2d) - 1);
 			var dirtyWanted = desiredRooms.HasFlag(InputRooms.DirtyKitchen);
 			var cleanWanted = desiredRooms.HasFlag(InputRooms.CleanKitchen);
+
+			if(bldgProgram.Kitchenette)
+				livingRoom.ExtendLength(4); // this seems wrong. my livingroom will be infinite
 
 			Room dirtyKitchen;
 			Room cleanKitchen;
@@ -149,18 +155,19 @@ namespace RoomArrangement
 			if(dirtyWanted && cleanWanted)
 				if(resFactor < dimsForKitchens.Count())
 				{
-					KitchenPool += dimsForKitchens[resFactor] * 12; // the Dirty Kitchen
-					Kitchenette = true; // the clean kitchen
+					dirtyKitchen = AddRoom<Kitchen>("Dirty", dimsForKitchens[resFactor] / GridSize, 12 / GridSize);
+					cleanKitchen = livingRoom;
 				}
 				else
 				{
-					KitchenPool += dimsForKitchens[resFactor] * 12 * 2; // Both kitchens
+					dirtyKitchen = AddRoom<Kitchen>("Dirty", dimsForKitchens[resFactor] / GridSize, 12 / GridSize);
+					cleanKitchen = AddRoom<Kitchen>("Clean", dimsForKitchens[resFactor] / GridSize, 12 / GridSize);
 				}
 
 			else if(dirtyWanted ^ cleanWanted) // XOR operator FTW
-				KitchenPool += dimsForKitchens[resFactor] * 12; // either kitchen
+				dirtyKitchen = cleanKitchen = AddRoom<Kitchen>(dimsForKitchens[resFactor] / GridSize, 12 / GridSize);
 			else
-				Kitchenette = true;
+				dirtyKitchen = cleanKitchen = livingRoom; // Kitchenette
 			#endregion
 
 			#region Desired Rooms 
@@ -168,31 +175,32 @@ namespace RoomArrangement
 			// Ideally the code would cycle through those by the priority made by the client. or CRITERIA
 			// Check how many flags are satisfied. If the flags are more than a certain percentage: create a corridor/or private rooms hub, and connect the extra rooms to it.
 			// alternatively, if livingRoom has more than a certain number of connection, it is extended per extra connection.
+			// TODO TODO TODO
+			//
+			// if(publicPool > 0 && desiredRooms.HasFlag(InputRooms.Reception))
+			// {
+			//	int receptionHallArea = Function(input.Total); // What would that be?
+			//	var reception = AddRoom<Reception>(12 / GridSize, receptionHallArea / (12 * GridSize));
 
-			if(publicPool > 0 && desiredRooms.HasFlag(InputRooms.Reception))
-			{
-				int receptionHallArea = Function(input.Total); // What would that be?
-				var reception = AddRoom<Reception>(12 / GridSize, receptionHallArea / (12 * GridSize));
+			//	PairRooms(main, reception);
 
-				PairRooms(main, reception);
+			//	publicPool -= reception.Area;
 
-				publicPool -= reception.Area;
+			//	if(publicPool > receptionHallArea)
+			//	{
+			//		// new Reception Room for te other gender .. maybe?
+			//	}
+			//	else
+			//	{
+			//		reception.ExtendLength(publicPool);
+			//		// There should be an entrypoint variable where I assign to the street in the end.
+			//	}
+			// }
 
-				if(publicPool > receptionHallArea)
-				{
-					// new Reception Room for te other gender .. maybe?
-				}
-				else
-				{
-					reception.ExtendLength(publicPool);
-					// There should be an entrypoint variable where I assign to the street in the end.
-				}
-			}
+			// if(privatePool > 0 && desiredRooms.HasFlag(InputRooms.Library))
+			// {
 
-			if(privatePool > 0 && desiredRooms.HasFlag(InputRooms.Library))
-			{
-
-			}
+			// }
 
 			// Go through rooms in desiredRooms. Check if privatePool has enough space.
 			// Library
@@ -277,11 +285,11 @@ namespace RoomArrangement
 			return false;
 		}
 
-		public Room AddRoom<T>(double x, double y) where T : Room => AddRoom<T>(new Rectangle(x, y));
-		public Room AddRoom<T>(Rectangle rec) where T : Room => AddRoom<T>(null, rec);
-		public Room AddRoom<T>(string name, double x, double y) where T : Room => AddRoom<T>(name, new Rectangle(x, y));
-		public Room AddRoom<T>(string name, Rectangle rec) where T : Room => AddRoom<T>(name, Point.Origin, rec);
-		public Room AddRoom<T>(string name, Point pt, Rectangle rec) where T : Room
+		public T AddRoom<T>(double x, double y) where T : Room => AddRoom<T>(new Rectangle(x, y));
+		public T AddRoom<T>(Rectangle rec) where T : Room => AddRoom<T>(null, rec);
+		public T AddRoom<T>(string name, double x, double y) where T : Room => AddRoom<T>(name, new Rectangle(x, y));
+		public T AddRoom<T>(string name, Rectangle rec) where T : Room => AddRoom<T>(name, Point.Origin, rec);
+		public T AddRoom<T>(string name, Point pt, Rectangle rec) where T : Room
 		{
 			// Should create an instance of T. As if it was // new T(name, pt, rec);
 			var room = (T)Activator.CreateInstance(typeof(T), name, pt, rec);

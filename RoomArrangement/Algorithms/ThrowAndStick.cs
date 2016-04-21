@@ -139,7 +139,7 @@ namespace RoomArrangement
 		{
 			var a = 1; // peak value
 			var b = 0; // center on x-axis
-			var c = 1; // width of bell curve
+			var c = 12; // width of bell curve
 
 			return (a * Pow(E, -(Pow((x - b), 2) / (2 * Pow(c, 2))))); // Gaussian Function
 		}

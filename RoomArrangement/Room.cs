@@ -85,6 +85,6 @@ namespace RoomArrangement
 		public override bool Equals(object obj) => obj is Room && this == (Room)obj;
 		public override int GetHashCode() => UniqueID.GetHashCode();
 
-		public override string ToString() => $"{Name} at {Anchor} with size {Space}.";
+		public override string ToString() => $"{GetType().Name}: {Name} at {Anchor} with dimensions {Space}";
 	}
 }

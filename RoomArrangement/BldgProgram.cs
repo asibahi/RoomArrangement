@@ -78,8 +78,8 @@ namespace RoomArrangement
 
 		void CalcKidsBedrooms(int kids)
 		{
-			double numOfTypicalBrs = Floor((double)kpbr / kids);
-			int residentFactor = (sons % kpbr);
+			double numOfTypicalBrs = Floor((double)kids / kpbr);
+			int residentFactor = (kids % kpbr);
 			int minRoomWidth = 12;
 
 			if(residentFactor != 0)
