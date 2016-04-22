@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using GAF;
 using GAF.Operators;
@@ -22,7 +23,7 @@ namespace RoomArrangement
 			var mutation = new BinaryMutate(0.2, true);
 
 			//create the GA itself 
-			var ga = new GeneticAlgorithm(population, chromosome => EvaluateFitness(chromosome, house));
+			var ga = new GeneticAlgorithm(population, chromosome => EvaluateFitness(chromosome, house).Wait());
 
 			//add the operators to the ga process pipeline 
 			ga.Operators.Add(elite);
@@ -38,7 +39,7 @@ namespace RoomArrangement
 			ga.Run(Terminate);
 		}
 
-		static double EvaluateFitness(Chromosome c, House house)
+		static async Task<double> EvaluateFitness(Chromosome c, House house)
 		{
 			var fitnessList = new List<double>();
 
@@ -47,7 +48,7 @@ namespace RoomArrangement
 			// Actual Evaluation
 			for(int i = 0; i < house.Count; i++)
 				for(int j = i; j < house.Count; j++)
-					fitnessList.Add(CompareRooms(i, j, house));
+					fitnessList.Add(await CompareRooms(i, j, house));
 
 			// Check for Boundary compliance
 			foreach(Room r in house)
@@ -76,7 +77,7 @@ namespace RoomArrangement
 						long currentEvaluation) => (population.MaximumFitness == 1) || currentGeneration == 5000;
 
 		// It should compare whether two rooms intersect and if they are related, how far they are.
-		static double CompareRooms(int i, int j, House house)
+		static Task<double> CompareRooms(int i, int j, House house)
 		{
 			var returnVal = 1d;
 			if(i != j)
