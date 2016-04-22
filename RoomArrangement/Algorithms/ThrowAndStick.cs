@@ -23,7 +23,7 @@ namespace RoomArrangement
 			var mutation = new BinaryMutate(0.2, true);
 
 			//create the GA itself 
-			var ga = new GeneticAlgorithm(population, chromosome => EvaluateFitness(chromosome, house).Wait());
+			var ga = new GeneticAlgorithm(population, chromosome => EvaluateFitness(chromosome, house).Result;
 
 			//add the operators to the ga process pipeline 
 			ga.Operators.Add(elite);
