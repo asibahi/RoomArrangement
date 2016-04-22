@@ -3,18 +3,10 @@
 namespace RoomArrangement
 {
 	// Replicating shit from the Rhino SDK for my purposes
-	struct Vector
+	public struct Vector
 	{
 		public double X { get; set; }
 		public double Y { get; set; }
-
-		// Use Doubles instead of Ints so for more precision and stuff
-		// We'll see how that plays out when implementing a Move method.
-		public Vector(int x, int y)
-		{
-			X = x;
-			Y = y;
-		}
 
 		public Vector(double x, double y)
 		{
@@ -51,18 +43,16 @@ namespace RoomArrangement
 		public static Vector operator *(Vector v, double d) => new Vector(v.X * d, v.Y * d);
 		public static Vector operator /(Vector v, double d) => new Vector(v.X / d, v.Y / d);
 
-
 		// Equality
-		public static bool operator ==(Vector v1, Vector v2) => v1.X == v2.X && v1.Y == v2.Y;
-		public static bool operator !=(Vector v1, Vector v2) => !(v1.X == v2.X && v1.Y == v2.Y);
+		public static bool operator ==(Vector v1, Vector v2) => v1.Equals(v2);
+		public static bool operator !=(Vector v1, Vector v2) => !v1.Equals(v2);
 
+		public bool Equals(Vector v) => (X == v.X) && (Y == v.Y);
 		public override bool Equals(object obj) => obj is Vector && this == (Vector)obj;
-		public bool Equals(Vector v) => ((X == v.X) && (Y == v.Y));
 		public override int GetHashCode() => X.GetHashCode() ^ (13 * Y.GetHashCode());
 
 		// Negation
 		public static Vector operator -(Vector v) => new Vector(-v.X, -v.Y);
 		#endregion
-
 	}
 }

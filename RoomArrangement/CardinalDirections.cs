@@ -3,7 +3,7 @@
 namespace RoomArrangement
 {
 	[Flags]
-	enum CardinalDirections
+	public enum CardinalDirections
 	{
 		None = 0,
 		North = 1 << 0,

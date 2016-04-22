@@ -1,83 +1,50 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using static System.Math;
 
 namespace RoomArrangement
 {
-	class BldgProgram
+	public class BldgProgram
 	{
-		#region Quantitive Data
 		int sons;
 		int dtrs;
 		int parents;
 		int gparents;
 		int kpbr;
-		double totalResidents;
+		int totalResidents;
 
-		// Ugly hacks for my criteria. TODO to replace with a proper structure once I figure out the criteria.
-		// Criteria should also include stuff like preferable Room dimensions
-		double baseLivingRoomArea = 24 * 12;
-		int[] DefaultLivingRoomAreas = { 500, 650, 800, 900 };
-		int[] DimsForKitchens = { 8, 12, 16 };
+		public double PrivatePool { get; private set; } = 750; // feet. For 3 people
+		public double PublicPool { get; private set; } = 0;
 
-		// Kitchen Data
-		public double KitchenArea { get; private set; }
-		public Rectangle KitchenSpace { get; private set; }
-		public int KitchenCount { get; private set; }
-		public double KitchensTotalArea => KitchenArea * KitchenCount;
+		public double BedroomPool { get; private set; } = 0;
+		public int BedroomCount { get; private set; } = 0;
+		public IList<int> NumberOfKidsInTheOlderKidsBedroom { get; private set; } = new List<int>();
 
-		// Living Room Data
-		public double LivingRoomArea => LivingRoomsTotalArea / LivingRoomsCount;
-		public Rectangle LivingRoomSpace { get; private set; }
-		public int LivingRoomsCount { get; private set; }
-		public double LivingRoomsTotalArea { get; private set; }
+		public double KitchenPool { get; private set; } = 0;
+		public bool Kitchenette { get; private set; } = false; // if this is true it should expand the Living Room.
 
-		// Bedroom Data
-		public List<double> BedroomTypicalAreas { get; private set; } = new List<double>();
-		public List<Rectangle> BedroomTypSpaces { get; private set; } = new List<Rectangle>();
-		public int BedroomTypCount => BedroomTypSpaces.Count;
 
-		public List<double> BedroomOddAreas { get; private set; } = new List<double>();
-		public List<Rectangle> BedroomOddSpaces { get; private set; } = new List<Rectangle>();
-		public int BedroomOddCount => BedroomOddSpaces.Count;
-		// Either one or two odd bedrooms. one for boys and one for girls.
-
-		public List<double> BedroomCouplesAreas { get; private set; } = new List<double>();
-		public List<Rectangle> BedroomCouplesSpaces { get; private set; } = new List<Rectangle>();
-		public int BedroomCouplesCount => BedroomCouplesSpaces.Count;
-
-		public double TotalBedroomsArea => (BedroomTypicalAreas.Sum() + BedroomOddAreas.Sum() + BedroomCouplesAreas.Sum());
-		public int TotalNumberOfBedrooms => (BedroomTypCount + BedroomOddCount + BedroomCouplesCount);
-		#endregion
-
-		// Another placeholder for a proper Criteria class TODO
-		// Adjacency matrix mockup
-		//
-		//		Bedroom		Kitchen		LivingRoom
-		// LivingRoom	Aye		Aye		-
-		// Kitchen	Nay		-	
-		// Bedroom	-
-		// 
-		// So any bedroom connected to any Living room?
-		// I need Living Room Types !!
-		//
-		// Same for kitchens.
-		//
-		// How would I even begin to do this?
-
-		// Constructor and main calulcations
 		public BldgProgram(Input input)
 		{
 			sons = input.Sons;
 			dtrs = input.Daughters;
 			parents = input.Parents;
-			gparents = input.GParents;
+			gparents = input.Grandparents;
 			kpbr = input.KidsPerBedroom;
 			totalResidents = input.Total;
 
-			CalcKitchensAndLivingRooms();
+			for(int i = totalResidents; i > 3; i--)
+				PrivatePool += 100; // feet, for each extra person over 3.
+
+			var inputRooms = input.Rooms;
+
+			CalcKitchens(inputRooms);
+
+			if(inputRooms.HasFlag(InputRooms.Reception))
+				if(inputRooms.HasFlag(InputRooms.DirtyKitchen))
+					PublicPool += 24 * 16;
+				else
+					PublicPool += 24 * 12;
 
 			CalcKidsBedrooms(sons);
 
@@ -86,91 +53,73 @@ namespace RoomArrangement
 			CalcCouplesBedrooms();
 		}
 
-		void CalcKitchensAndLivingRooms()
+		void CalcKitchens(InputRooms inputRooms)
 		{
-			// Kitchen Calcs
-			var resFactor = (int)(Ceiling(totalResidents / 2) - 1);
+			int[] dimsForKitchens = { 8, 12, 16 };
 
-			KitchenSpace = new Rectangle(DimsForKitchens[resFactor] / 4, 3);
-			if(resFactor < DimsForKitchens.Count())
-			{
-				KitchenArea = DimsForKitchens[resFactor] * 12;
-				KitchenCount = 1;
-			}
+			var resFactor = (int)(Ceiling(totalResidents / 2d) - 1);
+			var dirtyWanted = inputRooms.HasFlag(InputRooms.DirtyKitchen);
+			var cleanWanted = inputRooms.HasFlag(InputRooms.CleanKitchen);
+
+			if(dirtyWanted && cleanWanted)
+				if(resFactor < dimsForKitchens.Count())
+				{
+					KitchenPool += dimsForKitchens[resFactor] * 12; // the Dirty Kitchen
+					Kitchenette = true; // the clean kitchen
+				}
+				else
+					KitchenPool += dimsForKitchens[resFactor] * 12 * 2; // Both kitchens
+
+			else if(dirtyWanted ^ cleanWanted) // XOR operator FTW
+				KitchenPool += dimsForKitchens[resFactor] * 12; // either kitchen
 			else
-			{
-				KitchenArea = DimsForKitchens.Last() * 12;
-				KitchenCount = 2;
-			}
-
-			// Living Rooms areas dependant on Kitchens.
-			// There must be some better way to do the math
-			if(totalResidents <= 4)
-			{
-				resFactor = (int)(totalResidents - 1);
-				LivingRoomsTotalArea = DefaultLivingRoomAreas[resFactor] - KitchensTotalArea;
-			}
-			else
-			{
-				resFactor = (int)((totalResidents - 4) * 100);
-				LivingRoomsTotalArea = resFactor + 900 - KitchensTotalArea;
-			}
-
-			// These calcs are such a hack ........... wtf
-			// However the intent is somewhat readable this way
-			LivingRoomsCount = (int)Ceiling(LivingRoomsTotalArea / baseLivingRoomArea);
-
-			var actualArea = LivingRoomsTotalArea / LivingRoomsCount;
-			var otherLRDim = actualArea / 12;
-			var dimRoundedToGrid = (int)Ceiling(otherLRDim / 4);
-
-			LivingRoomSpace = new Rectangle(dimRoundedToGrid, 3);
+				Kitchenette = true;
 		}
 
 		void CalcKidsBedrooms(int kids)
 		{
-			double numOfTypicalBrs = Floor((double)kpbr / kids);
-			int residentFactor = (sons % kpbr);
+			double numOfTypicalBrs = Floor((double)kids / kpbr);
+			int residentFactor = (kids % kpbr);
+			int minRoomWidth = 12;
 
 			if(residentFactor != 0)
-			{
-				if(residentFactor <= 2)
+				if(residentFactor <= 2) // Odd rooms.
 				{
-					BedroomOddAreas.Add(16 * 12);
-					BedroomOddSpaces.Add(new Rectangle(4, 3));
+					BedroomPool += 16 * minRoomWidth;
+					BedroomCount++;
 				}
 				else
 				{
-					BedroomOddAreas.Add(((4 * (residentFactor - 1)) + 12) * 12);
-					BedroomOddSpaces.Add(new Rectangle(residentFactor + 2, 3));
+					BedroomPool += ((4 * (residentFactor - 1)) + 12) * minRoomWidth;
+					BedroomCount++;
 				}
-			}
 
-			BedroomTypicalAreas.Add((((4 * kpbr) + 8) * 12) * numOfTypicalBrs);
-
-			for(int i = 0; i < numOfTypicalBrs; i++)
-				BedroomTypSpaces.Add(new Rectangle(kpbr + 2, 3));
+			NumberOfKidsInTheOlderKidsBedroom.Add(residentFactor);
+			BedroomPool += (((4 * kpbr) + 8) * minRoomWidth) * numOfTypicalBrs;
+			BedroomCount += (int)numOfTypicalBrs;
 		}
 
 		void CalcCouplesBedrooms()
 		{
+			int minRoomWidth = 12;
+
 			if(parents > 0)
 			{
-				BedroomCouplesAreas.Add(12 * 20);
-				BedroomCouplesSpaces.Add(new Rectangle(3, 5));
+				BedroomPool += minRoomWidth * 20;
+				BedroomCount++;
 			}
 
 			// Doesnt take into account that maybe the 2 Grandparents arent a couple !!
 			if(gparents > 0)
 			{
-				BedroomCouplesAreas.Add(12 * 20);
-				BedroomCouplesSpaces.Add(new Rectangle(3, 5));
+				BedroomPool += minRoomWidth * 20;
+				BedroomCount++;
 			}
 
 			if(gparents > 2)
 			{
-				BedroomCouplesAreas.Add(12 * 20);
-				BedroomCouplesSpaces.Add(new Rectangle(3, 5));
+				BedroomPool += minRoomWidth * 20;
+				BedroomCount++;
 			}
 		}
 	}

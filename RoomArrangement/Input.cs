@@ -1,7 +1,9 @@
 ﻿namespace RoomArrangement
 {
-	class Input
+	public class Input
 	{
+		// might want to make all setters internal.
+
 		public int Sons { get; set; }
 		public int Daughters { get; set; }
 
@@ -13,7 +15,7 @@
 		}
 
 		private int gparents;
-		public int GParents
+		public int Grandparents
 		{
 			get { return gparents; }
 			set { gparents = value >= 4 ? 4 : value; }
@@ -42,5 +44,7 @@
 			get { return MainStreet | streetSides; }
 			set { streetSides = value; }
 		}
+
+		public InputRooms Rooms { get; set; }
 	}
 }
