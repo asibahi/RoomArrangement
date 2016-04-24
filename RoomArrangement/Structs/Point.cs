@@ -1,7 +1,8 @@
-﻿namespace RoomArrangement
+﻿using System;
+
+namespace RoomArrangement
 {
-	// Replicating shit from the Rhino SDK for my purposes
-	public struct Point
+	public struct Point : IEquatable<Point>
 	{
 		public double X { get; set; }
 		public double Y { get; set; }

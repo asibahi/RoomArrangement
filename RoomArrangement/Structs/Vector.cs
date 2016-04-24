@@ -2,8 +2,7 @@
 
 namespace RoomArrangement
 {
-	// Replicating shit from the Rhino SDK for my purposes
-	public struct Vector
+	public struct Vector : IEquatable<Vector>
 	{
 		public double X { get; set; }
 		public double Y { get; set; }

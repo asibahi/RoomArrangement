@@ -1,7 +1,8 @@
-﻿namespace RoomArrangement
+﻿using System;
+
+namespace RoomArrangement 
 {
-	// Replicating shit from the Rhino SDK for my purposes
-	public struct Rectangle
+	public struct Rectangle : IEquatable<Rectangle>
 	{
 		public double XDim { get; set; }
 		public double YDim { get; set; }
