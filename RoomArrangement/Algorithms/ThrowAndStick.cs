@@ -29,7 +29,7 @@ namespace RoomArrangement
 			ga.Operators.Add(mutation);
 
 			// Events subscription
-			ga.OnGenerationComplete += ga_OnGenerationComplete;
+			ga.OnGenerationComplete += (sender, e) => WriteLine($"Fitness is {e.Population.GetTop(1)[0].Fitness}");
 			ga.OnRunComplete += (sender, e) => ga_OnRunComplete(sender, e, house);
 
 			// Run the GA 
@@ -137,33 +137,16 @@ namespace RoomArrangement
 		}
 
 		static double BellCurve(double x)
-		{
-			var a = 1; // peak value
-			var b = 0; // center on x-axis
-			var c = 100; // width of bell curve
+			=> Pow(E, -(Pow(x, 2) / (2 * Pow(100/*width*/, 2))));
 
-			return (a * Pow(E, -(Pow((x - b), 2) / (2 * Pow(c, 2))))); // Gaussian Function
-		}
-
-		// Events subscription
-		static double cMax;
-		static void ga_OnGenerationComplete(object sender, GaEventArgs e)
-		{
-			var c = e.Population.GetTop(1)[0];
-			if(c.Fitness > cMax)
-			{
-				cMax = c.Fitness;
-				WriteLine($"Fitness is {cMax}");
-			}
-		}
-
+		// Event subscription
 		static void ga_OnRunComplete(object sender, GaEventArgs e, House house)
 		{
 			var c = e.Population.GetTop(1)[0];
 			ReadChromosome(c, house);
 
 			WriteLine("The GA is Done");
-			WriteLine($"Fitness is {c.Fitness}");
+			WriteLine($"Final Fitness is {c.Fitness}");
 		}
 	}
 }
