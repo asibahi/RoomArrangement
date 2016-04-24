@@ -9,7 +9,7 @@ namespace RoomArrangement
 			var input = new Input();
 
 			input.RequestInput();
-		
+
 			var bldgProgram = new BldgProgram(input);
 			var house = new House(input, bldgProgram);
 
