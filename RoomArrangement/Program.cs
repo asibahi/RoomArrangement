@@ -29,7 +29,6 @@ namespace RoomArrangement
 				goto SonsInput;
 			}
 
-
 			Console.WriteLine("How many daughters do you have? (Please use numbers.)");
 		DaughtersInput:
 			tempInput = Console.ReadLine();
@@ -81,6 +80,7 @@ namespace RoomArrangement
 
 			Console.WriteLine(string.Format("There are {0} people in your family.", input.Total));
 			Console.WriteLine("Is this correct? (y/n)");
+
 		Question:
 			tempInput = Console.ReadLine().ToLower();
 
@@ -88,11 +88,9 @@ namespace RoomArrangement
 			{
 				Console.WriteLine("Thank you.");
 				Console.WriteLine(" ");
-
 			}
 			else if(tempInput == "n" || tempInput == "no")
 			{
-				Console.WriteLine("Tough.");
 				Console.WriteLine("Please revise your input.");
 				goto TheVeryBeginning;
 			}
@@ -102,6 +100,60 @@ namespace RoomArrangement
 				goto Question;
 			}
 
+		PlotQuestions:
+			Console.WriteLine("What is your plot width?");
+		PlotWidth:
+			tempInput = Console.ReadLine();
+
+			if(Int32.TryParse(tempInput, out tempNumber))
+			{
+				input.PlotWidth = tempNumber;
+				Console.WriteLine(string.Format("Your plot width is {0}'.", input.PlotWidth));
+				Console.WriteLine(" ");
+			}
+			else
+			{
+				Console.WriteLine("Please write a number.");
+				goto PlotWidth;
+			}
+
+			Console.WriteLine("What is your plot depth?");
+		PlotDepth:
+			tempInput = Console.ReadLine();
+
+			if(Int32.TryParse(tempInput, out tempNumber))
+			{
+				input.PlotDepth = tempNumber;
+				Console.WriteLine(string.Format("Your plot depth is {0}'.", input.PlotDepth));
+				Console.WriteLine(" ");
+			}
+			else
+			{
+				Console.WriteLine("Please write a number.");
+				goto PlotDepth;
+			}
+
+			Console.WriteLine(string.Format("Your plot area is {0} sqft.", input.PlotArea));
+			Console.WriteLine("Is this correct? (y/n)");
+
+		Question2:
+			tempInput = Console.ReadLine().ToLower();
+
+			if(tempInput == "y" || tempInput == "yes")
+			{
+				Console.WriteLine("Thank you.");
+				Console.WriteLine(" ");
+			}
+			else if(tempInput == "n" || tempInput == "no")
+			{
+				Console.WriteLine("Please revise your input.");
+				goto PlotQuestions;
+			}
+			else
+			{
+				Console.WriteLine("Please type 'y' or 'n'.");
+				goto Question2;
+			}
 			#endregion
 
 
