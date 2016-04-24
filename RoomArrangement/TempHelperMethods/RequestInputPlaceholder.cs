@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using static System.Console;
 
 namespace RoomArrangement
 {
@@ -10,155 +6,145 @@ namespace RoomArrangement
 	{
 		public static void RequestInput(this Input input)
 		{
-			#region Input This should be made better and integrated with the GUI TODO
+			//This should be made better and integrated with the GUI TODO
 			string tempInput;
 			int tempNumber;
 
 		TheVeryBeginning:
 
-			Console.WriteLine("How many sons do you have? (Please use numbers.)");
+			WriteLine("How many sons do you have? (Please use numbers.)");
 		SonsInput:
-			tempInput = Console.ReadLine();
+			tempInput = ReadLine();
 
 			if(int.TryParse(tempInput, out tempNumber))
 			{
 				input.Sons = tempNumber;
-				Console.WriteLine(string.Format("You have {0} sons.", input.Sons));
-				Console.WriteLine(" ");
+				WriteLine(string.Format("You have {0} sons. \r\n", input.Sons));
 			}
 			else
 			{
-				Console.WriteLine("Please write a number.");
+				WriteLine("Please write a number.");
 				goto SonsInput;
 			}
 
-			Console.WriteLine("How many daughters do you have? (Please use numbers.)");
+			WriteLine("How many daughters do you have? (Please use numbers.)");
 		DaughtersInput:
-			tempInput = Console.ReadLine();
+			tempInput = ReadLine();
 
-			if(Int32.TryParse(tempInput, out tempNumber))
+			if(int.TryParse(tempInput, out tempNumber))
 			{
 				input.Daughters = tempNumber;
-				Console.WriteLine(string.Format("You have {0} daughters.", input.Daughters));
-				Console.WriteLine(" ");
+				WriteLine(string.Format("You have {0} daughters. \r\n", input.Daughters));
 			}
 			else
 			{
-				Console.WriteLine("Please write a number.");
+				WriteLine("Please write a number.");
 				goto DaughtersInput;
 			}
 
-
-			Console.WriteLine("How many parents live in the house?");
+			WriteLine("How many parents live in the house?");
 		ParentInput:
-			tempInput = Console.ReadLine();
+			tempInput = ReadLine();
 
-			if(Int32.TryParse(tempInput, out tempNumber))
+			if(int.TryParse(tempInput, out tempNumber))
 			{
 				input.Parents = tempNumber;
-				Console.WriteLine(string.Format("There are {0} parents.", input.Parents));
-				Console.WriteLine(" ");
+				WriteLine(string.Format("There are {0} parents. \r\n", input.Parents));
 			}
 			else
 			{
-				Console.WriteLine("Please write a number.");
+				WriteLine("Please write a number.");
 				goto ParentInput;
 			}
 
-			Console.WriteLine("How many grandparents live in the house?");
+			WriteLine("How many grandparents live in the house?");
 		GParentInput:
-			tempInput = Console.ReadLine();
+			tempInput = ReadLine();
 
-			if(Int32.TryParse(tempInput, out tempNumber))
+			if(int.TryParse(tempInput, out tempNumber))
 			{
 				input.Grandparents = tempNumber;
-				Console.WriteLine(string.Format("There are {0} grandparents.", input.Grandparents));
-				Console.WriteLine(" ");
+				WriteLine(string.Format("There are {0} grandparents. \r\n", input.Grandparents));
 			}
 			else
 			{
-				Console.WriteLine("Please write a number.");
+				WriteLine("Please write a number.");
 				goto GParentInput;
 			}
 
-			Console.WriteLine(string.Format("There are {0} people in your family.", input.Total));
-			Console.WriteLine("Is this correct? (y/n)");
+			WriteLine(string.Format("There are {0} people in your family.", input.Total));
+			WriteLine("Is this correct? (y/n)");
 
 		Question:
-			tempInput = Console.ReadLine().ToLower();
+			tempInput = ReadLine().ToLower();
 
 			if(tempInput == "y" || tempInput == "yes")
 			{
-				Console.WriteLine("Thank you.");
-				Console.WriteLine(" ");
+				WriteLine("Thank you. \r\n");
 			}
 			else if(tempInput == "n" || tempInput == "no")
 			{
-				Console.WriteLine("Please revise your input.");
+				WriteLine("Please revise your input.");
 				goto TheVeryBeginning;
 			}
 			else
 			{
-				Console.WriteLine("Please type 'y' or 'n'.");
+				WriteLine("Please type 'y' or 'n'.");
 				goto Question;
 			}
 
 		PlotQuestions:
-			Console.WriteLine("What is your plot width?");
+			WriteLine("What is your plot width?");
 		PlotWidth:
-			tempInput = Console.ReadLine();
+			tempInput = ReadLine();
 
-			if(Int32.TryParse(tempInput, out tempNumber))
+			if(int.TryParse(tempInput, out tempNumber))
 			{
 				input.PlotWidth = tempNumber;
-				Console.WriteLine(string.Format("Your plot width is {0}'.", input.PlotWidth));
-				Console.WriteLine(" ");
+				WriteLine(string.Format("Your plot width is {0}'. \r\n", input.PlotWidth));
 			}
 			else
 			{
-				Console.WriteLine("Please write a number.");
+				WriteLine("Please write a number.");
 				goto PlotWidth;
 			}
 
-			Console.WriteLine("What is your plot depth?");
+			WriteLine("What is your plot depth?");
 		PlotDepth:
-			tempInput = Console.ReadLine();
+			tempInput = ReadLine();
 
-			if(Int32.TryParse(tempInput, out tempNumber))
+			if(int.TryParse(tempInput, out tempNumber))
 			{
 				input.PlotDepth = tempNumber;
-				Console.WriteLine(string.Format("Your plot depth is {0}'.", input.PlotDepth));
-				Console.WriteLine(" ");
+				WriteLine(string.Format("Your plot depth is {0}'.", input.PlotDepth));
+				WriteLine(" ");
 			}
 			else
 			{
-				Console.WriteLine("Please write a number.");
+				WriteLine("Please write a number.");
 				goto PlotDepth;
 			}
 
-			Console.WriteLine(string.Format("Your plot area is {0} sqft.", input.PlotArea));
-			Console.WriteLine("Is this correct? (y/n)");
+			WriteLine(string.Format("Your plot area is {0} sqft.", input.PlotArea));
+			WriteLine("Is this correct? (y/n)");
 
 		Question2:
-			tempInput = Console.ReadLine().ToLower();
+			tempInput = ReadLine().ToLower();
 
 			if(tempInput == "y" || tempInput == "yes")
 			{
-				Console.WriteLine("Thank you.");
-				Console.WriteLine(" ");
+				WriteLine("Thank you. \r\n");
 			}
 			else if(tempInput == "n" || tempInput == "no")
 			{
-				Console.WriteLine("Please revise your input.");
+				WriteLine("Please revise your input.");
 				goto PlotQuestions;
 			}
 			else
 			{
-				Console.WriteLine("Please type 'y' or 'n'.");
+				WriteLine("Please type 'y' or 'n'.");
 				goto Question2;
 			}
-			#endregion
-
 		}
 	}
 }
