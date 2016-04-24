@@ -1,4 +1,4 @@
-﻿using System;
+﻿using static System.Console;
 
 namespace RoomArrangement
 {
@@ -17,10 +17,10 @@ namespace RoomArrangement
 			house.RunPushPull();
 
 			foreach(Room r in house)
-				Console.WriteLine(r.ToString());
+				WriteLine(r.ToString());
 
 			//house.Draw();
-			Console.ReadKey();
+			ReadKey();
 		}
 	}
 }
