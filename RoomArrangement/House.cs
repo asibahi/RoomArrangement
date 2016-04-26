@@ -337,7 +337,6 @@ namespace RoomArrangement
 						recXCount++;
 						if(recXCount >= currentRec.XDim)
 							inRectangle = false;
-
 					}
 					else
 					{
@@ -345,7 +344,7 @@ namespace RoomArrangement
 						recXCount = 0;
 					}
 				}
-				Console.Write("\n");
+				Console.WriteLine(" ");
 			}
 		}
 	}

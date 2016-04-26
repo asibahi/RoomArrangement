@@ -6,13 +6,11 @@ namespace RoomArrangement
 	public abstract class Room : IEquatable<Room>
 	{
 		// Meta properties
-		readonly int numericID;
 		protected readonly string name;
-		private readonly Guid uniqueID;
 
-		public int NumericID => numericID; // Used for ordering in Tuples.
+		public int NumericID { get; } // Used for ordering in Tuples.
 		abstract public string Name { get; }
-		public Guid UniqueID => uniqueID;
+		public Guid UniqueID { get; }
 		static int TotalRoomCount { get; set; }
 
 		protected abstract bool Flexible { get; }
@@ -31,8 +29,8 @@ namespace RoomArrangement
 		// Constructor
 		protected Room(string n, Point pt, Rectangle rec)
 		{
-			numericID = ++TotalRoomCount;
-			uniqueID = Guid.NewGuid();
+			NumericID = ++TotalRoomCount;
+			UniqueID = Guid.NewGuid();
 			name = n;
 
 			Space = rec;

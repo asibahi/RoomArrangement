@@ -7,14 +7,14 @@
 		public int Sons { get; set; }
 		public int Daughters { get; set; }
 
-		private int parents;
+		int parents;
 		public int Parents
 		{
 			get { return parents; }
 			set { parents = value >= 2 ? 2 : value; }
 		}
 
-		private int gparents;
+		int gparents;
 		public int Grandparents
 		{
 			get { return gparents; }
@@ -23,7 +23,7 @@
 
 		public int Total => Sons + Daughters + parents + gparents;
 
-		private int kpbr = 1;
+		int kpbr = 1;
 		public int KidsPerBedroom
 		{
 			get { return kpbr; }
