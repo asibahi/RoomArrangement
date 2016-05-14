@@ -9,7 +9,7 @@ namespace RoomArrangement
 		{
 			var hardCount = 0;
 			var resolvedCount = 0;
-			var totalRoomPairs = house.Count * (house.Count - 1);
+			var totalRoomPairs = house.RoomCount * (house.RoomCount - 1);
 			var hardLim = 50000;
 
 			do
@@ -19,8 +19,8 @@ namespace RoomArrangement
 					Pull(tuple.Item1, tuple.Item2);
 
 				// Go Through the rooms in sequence and move them away from each other.
-				for(int i = 0; i < house.Count; i++)
-					for(int j = i + 1; j < house.Count; j++)
+				for(int i = 0; i < house.RoomCount; i++)
+					for(int j = i + 1; j < house.RoomCount; j++)
 						resolvedCount = PushOrAddCount(resolvedCount, house[i], house[j], house.Boundary);
 		
 				if(++hardCount >= hardLim)

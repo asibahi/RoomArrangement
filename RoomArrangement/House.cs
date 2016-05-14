@@ -6,7 +6,7 @@ using static System.Math;
 
 namespace RoomArrangement
 {
-	public class House : IList<Room>
+	public class House : IEnumerable<Room>
 	{
 		// Fields and Properties
 		List<Room> mainList;
@@ -26,14 +26,13 @@ namespace RoomArrangement
 		{
 			mainList = new List<Room>();
 			Adjacencies = new List<Tuple<Room, Room>>();
+
 			Streetside = input.StreetSides;
 			MainStreet = input.MainStreet;
 
 			var privatePool = bldgProgram.PrivatePool / (GridSize * GridSize);
 			var publicPool = bldgProgram.PublicPool / (GridSize * GridSize);
-
 			var bedroomCount = bldgProgram.BedroomCount;
-
 			var kitchenPool = bldgProgram.KitchenPool / (GridSize * GridSize);
 
 			if(input.MainStreet == CardinalDirections.East || input.MainStreet == CardinalDirections.West)
@@ -59,7 +58,73 @@ namespace RoomArrangement
 				livingRoom = main;
 			}
 
-			#region BedroomCreation
+			BedroomCtor(input, bldgProgram, bedroomCount, livingRoom);
+
+			var desiredRooms = input.Rooms;
+			Room diningRoom;
+
+			if(desiredRooms.HasFlag(InputRooms.DiningRoom)) // Sketch
+			{
+				var diningRoomSize = input.Total <= 8 ? 16
+									  : Floor((input.Total - 8d) / 4) * 4 + 16;
+				// 12 * 16 for 8 people !! more for each extra 4 ppl add 4 ft.
+				diningRoom = AddRoom<DiningRoom>("Dining", 12 / GridSize, diningRoomSize / (12 * GridSize));
+				publicPool -= diningRoom.Area;
+
+				PairRooms(diningRoom, livingRoom);
+			}
+			else
+			{
+				livingRoom.ExtendLength(3);
+				diningRoom = livingRoom;
+			}
+
+			KitchenCtor(input.Total, bldgProgram.Kitchenette, livingRoom, diningRoom, desiredRooms);
+
+			#region Desired Rooms 
+			// Ideally the code would cycle through those by the priority made by the client. or CRITERIA
+			// Check how many flags are satisfied. If the flags are more than a certain percentage: 
+			// create a corridor/or private rooms hub, and connect the extra rooms to it.
+			// alternatively, if livingRoom has more than a certain number of connection, 
+			// it is extended per extra connection.
+			//
+			// TODO TODO TODO
+			//
+			// if(publicPool > 0 && desiredRooms.HasFlag(InputRooms.Reception))
+			// {
+			//	int receptionHallArea = Function(input.Total); // What would that be?
+			//	var reception = AddRoom<Reception>(12 / GridSize, receptionHallArea / (12 * GridSize));
+
+			//	PairRooms(main, reception);
+
+			//	publicPool -= reception.Area;
+
+			//	if(publicPool > receptionHallArea)
+			//	{
+			//		// new Reception Room for te other gender .. maybe?
+			//	}
+			//	else
+			//	{
+			//		reception.ExtendLength(publicPool);
+			//		// There should be an entrypoint variable where I assign to the street in the end.
+			//	}
+			// }
+
+			// if(privatePool > 0 && desiredRooms.HasFlag(InputRooms.Library))
+			// {
+
+			// }
+
+			// Go through rooms in desiredRooms. Check if privatePool has enough space.
+			// Library
+			// Office
+			// GameRoom
+			// w/e 
+			#endregion
+		}
+
+		void BedroomCtor(Input input, BldgProgram bldgProgram, int bedroomCount, Room livingRoom)
+		{
 			if(input.Grandparents > 0)
 			{
 				// Technically this should be a suite
@@ -70,10 +135,10 @@ namespace RoomArrangement
 			}
 
 			Room bedroomHub;
-
 			if(bedroomCount > 1)
 			{
 				bedroomHub = AddRoom<Corridor>("Bedroom Corridor", 4 / GridSize, ((bedroomCount * 6) + 6) / GridSize);
+
 				PairRooms(bedroomHub, livingRoom);
 			}
 			else
@@ -116,37 +181,20 @@ namespace RoomArrangement
 			for(int i = 0; i < bedroomCount; i++)
 			{
 				var bedroom = AddRoom<Bedroom>(((4 * input.KidsPerBedroom) + 8) / GridSize, 12 / GridSize);
+
 				PairRooms(bedroom, bedroomHub);
 			}
-			#endregion
+		}
 
-			var desiredRooms = input.Rooms;
-			Room diningRoom;
-
-			if(desiredRooms.HasFlag(InputRooms.DiningRoom)) // Sketch
-			{
-				var diningRoomSize = input.Total <= 8 ? 16
-								      : Floor((input.Total - 8d) / 4) * 4 + 16;
-				// 12 * 16 for 8 people !! more for each extra 4 ppl add 4 ft.
-				diningRoom = AddRoom<DiningRoom>("Dining", 12 / GridSize, diningRoomSize / (12 * GridSize));
-				publicPool -= diningRoom.Area;
-
-				PairRooms(diningRoom, livingRoom);
-			}
-			else
-			{
-				livingRoom.ExtendLength(3);
-				diningRoom = livingRoom;
-			}
-
-			#region Kitchen Creation
+		void KitchenCtor(int TotalResidents, bool kitchenette, Room livingRoom, Room diningRoom, InputRooms desiredRooms)
+		{
 			int[] dimsForKitchens = { 8, 12, 16 }; // this part should be part of criteria
 
-			var resFactor = (int)(Ceiling(input.Total / 2d) - 1);
+			var resFactor = (int)(Ceiling(TotalResidents / 2d) - 1);
 			var dirtyWanted = desiredRooms.HasFlag(InputRooms.DirtyKitchen);
 			var cleanWanted = desiredRooms.HasFlag(InputRooms.CleanKitchen);
 
-			if(bldgProgram.Kitchenette)
+			if(kitchenette)
 				livingRoom.ExtendLength(4); // this seems wrong. my livingroom will be infinite
 
 			Room dirtyKitchen;
@@ -157,64 +205,33 @@ namespace RoomArrangement
 				{
 					dirtyKitchen = AddRoom<Kitchen>("Dirty", dimsForKitchens[resFactor] / GridSize, 12 / GridSize);
 					cleanKitchen = livingRoom;
+
+					PairRooms(dirtyKitchen, diningRoom);
 				}
 				else
 				{
 					dirtyKitchen = AddRoom<Kitchen>("Dirty", dimsForKitchens[resFactor] / GridSize, 12 / GridSize);
 					cleanKitchen = AddRoom<Kitchen>("Clean", dimsForKitchens[resFactor] / GridSize, 12 / GridSize);
+
+					PairRooms(cleanKitchen, livingRoom);
+					PairRooms(dirtyKitchen, diningRoom);
 				}
 
 			else if(dirtyWanted ^ cleanWanted) // XOR operator FTW
+			{
 				dirtyKitchen = cleanKitchen = AddRoom<Kitchen>(dimsForKitchens[resFactor] / GridSize, 12 / GridSize);
+
+				PairRooms(diningRoom, dirtyKitchen);
+			}
 			else
+			{
 				dirtyKitchen = cleanKitchen = livingRoom; // Kitchenette
-			#endregion
 
-			#region Desired Rooms 
-
-			// Ideally the code would cycle through those by the priority made by the client. or CRITERIA
-			// Check how many flags are satisfied. If the flags are more than a certain percentage: create a corridor/or private rooms hub, and connect the extra rooms to it.
-			// alternatively, if livingRoom has more than a certain number of connection, it is extended per extra connection.
-			// TODO TODO TODO
-			//
-			// if(publicPool > 0 && desiredRooms.HasFlag(InputRooms.Reception))
-			// {
-			//	int receptionHallArea = Function(input.Total); // What would that be?
-			//	var reception = AddRoom<Reception>(12 / GridSize, receptionHallArea / (12 * GridSize));
-
-			//	PairRooms(main, reception);
-
-			//	publicPool -= reception.Area;
-
-			//	if(publicPool > receptionHallArea)
-			//	{
-			//		// new Reception Room for te other gender .. maybe?
-			//	}
-			//	else
-			//	{
-			//		reception.ExtendLength(publicPool);
-			//		// There should be an entrypoint variable where I assign to the street in the end.
-			//	}
-			// }
-
-			// if(privatePool > 0 && desiredRooms.HasFlag(InputRooms.Library))
-			// {
-
-			// }
-
-			// Go through rooms in desiredRooms. Check if privatePool has enough space.
-			// Library
-			// Office
-			// GameRoom
-			// w/e 
-			//
-			// Ideally the code would cycle through those by the priority made by the client.
-
-			#endregion
+				if(diningRoom != livingRoom)
+					PairRooms(diningRoom, dirtyKitchen);
+			}
 		}
 
-		#region IList Implementation
-		// On a scale from one to ten, how much do I really need to implement IList?
 		public Room this[int index]
 		{
 			get { return mainList[index]; }
@@ -231,24 +248,18 @@ namespace RoomArrangement
 
 		public int IndexOf(Room item)
 		{
-			for(int i = 0; i < Count; i++)
+			for(int i = 0; i < RoomCount; i++)
 				if(this[i].UniqueID == item.UniqueID)
 					return i;
 			return -1;
 		}
 
-		public int Count => mainList.Count;
-		public bool IsReadOnly => true;
+		public int RoomCount => mainList.Count;
 
-		public void Add(Room item) => mainList.Add(item);
-		public void Clear() => mainList.Clear();
-		public void CopyTo(Room[] array, int arrayIndex) => mainList.CopyTo(array, arrayIndex);
-		public void Insert(int index, Room item) => mainList.Insert(index, item);
-		public bool Remove(Room item) => mainList.Remove(item);
-		public void RemoveAt(int index) => mainList.RemoveAt(index);
+		void Add(Room item) => mainList.Add(item);
+		void Clear() => mainList.Clear();
 		public IEnumerator<Room> GetEnumerator() => mainList.GetEnumerator();
 		IEnumerator IEnumerable.GetEnumerator() => mainList.GetEnumerator();
-		#endregion
 
 		public void PairRooms(Room r1, Room r2)
 		{
@@ -257,7 +268,7 @@ namespace RoomArrangement
 
 			foreach(var pair in Adjacencies)
 				if((r1.UniqueID == pair.Item1.UniqueID && r2.UniqueID == pair.Item2.UniqueID)
-				    || (r1.UniqueID == pair.Item2.UniqueID && r2.UniqueID == pair.Item1.UniqueID))
+					|| (r1.UniqueID == pair.Item2.UniqueID && r2.UniqueID == pair.Item1.UniqueID))
 					throw new Exception("Pair already paired.");
 
 			var adjacentRooms = r1.NumericID < r2.NumericID ? Tuple.Create(r1, r2) : Tuple.Create(r2, r1);
@@ -273,6 +284,7 @@ namespace RoomArrangement
 					rooms.Add(pair.Item2);
 				else if(pair.Item2.UniqueID == room.UniqueID)
 					rooms.Add(pair.Item1);
+
 			return rooms;
 		}
 
@@ -280,8 +292,9 @@ namespace RoomArrangement
 		{
 			foreach(var pair in Adjacencies)
 				if((r1.UniqueID == pair.Item1.UniqueID && r2.UniqueID == pair.Item2.UniqueID)
-				    || (r1.UniqueID == pair.Item2.UniqueID && r2.UniqueID == pair.Item1.UniqueID))
+					|| (r1.UniqueID == pair.Item2.UniqueID && r2.UniqueID == pair.Item1.UniqueID))
 					return true;
+
 			return false;
 		}
 

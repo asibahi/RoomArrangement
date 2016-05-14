@@ -10,10 +10,23 @@ namespace RoomArrangement
 {
 	public static class ThrowAndStick
 	{
+		// Each chromosome represents a certain arrangmenet of rooms
+		// a chromosome will have 17 bits total for each room:
+		// 8 bits for X location , 8 bits for Y location , 1 bit for Orientation
+		// A loop through the chromose would adjust the rooms accordingly.
+		static int bitsToAdjustRoom = 17;
+		static int populationSize = 100;
+
+		static double boundaryXDim;
+		static double boundaryYDim;
+
 		// Using Genetic Algorithms
 		public static void RunThrowAndStick(this House house)
 		{
-			var population = new Population(100, 17 * house.Count, false, false);
+			boundaryXDim = house.Boundary.XDim;
+			boundaryYDim = house.Boundary.YDim;
+
+			var population = new Population(populationSize, bitsToAdjustRoom * house.RoomCount, false, false);
 
 			//create the genetic operators 
 			var elite = new Elite(5);
@@ -44,20 +57,20 @@ namespace RoomArrangement
 			ReadChromosome(c, house);
 
 			// Actual Evaluation
-			for(int i = 0; i < house.Count; i++)
-				for(int j = i; j < house.Count; j++)
+			for(int i = 0; i < house.RoomCount; i++)
+				for(int j = i; j < house.RoomCount; j++)
 					fitnessList.Add(CompareRooms(i, j, house));
 
 			// Check for Boundary compliance
 			foreach(Room r in house)
 			{
-				var xFarthest = r.Anchor.X + r.Space.XDim - house.Boundary.XDim;
+				var xFarthest = r.Anchor.X + r.Space.XDim - boundaryXDim;
 				if(xFarthest > 0)
 					fitnessList.Add(Pow(BellCurve(xFarthest), 10));
 				else
 					fitnessList.Add(1);
 
-				var yFarthest = r.Anchor.Y + r.Space.YDim - house.Boundary.YDim;
+				var yFarthest = r.Anchor.Y + r.Space.YDim - boundaryYDim;
 				if(yFarthest > 0)
 					fitnessList.Add(Pow(BellCurve(yFarthest), 10));
 				else
@@ -112,32 +125,29 @@ namespace RoomArrangement
 
 		static void ReadChromosome(Chromosome c, House house)
 		{
-			// Each chromosome represents a certain arrangmenet of rooms
-			// a chromosome will have 17 bits total for each room:
-			// 8 bits for X location , 8 bits for Y location , 1 bit for Orientation
-			// A loop through the chromose would adjust the rooms accordingly.
-			//
-			// Example with 9 bits instead of 17, but same idea:
-			// Chromosome:		000100101_001101010_110101101
-			// First Room:		0001_0010_1
-			// Second Room:		0011_0101_0
-			// Third Room:		1101_0110_1
+			var fullRoom = bitsToAdjustRoom - 1;
+			var halfRoom = fullRoom / 2;
 
 			// Adjusting the Rooms
-			for(int i = 0; i < c.Count; i += 17)
+			for(int i = 0; i < c.Count; i += bitsToAdjustRoom)
 			{
-				int x = ToInt32(c.ToBinaryString(i, 8), 2);
-				int y = ToInt32(c.ToBinaryString(i + 8, 8), 2);
-				int oTemp = ToInt32(c.ToBinaryString(i + 16, 1), 2);
+				int x = ToInt32(c.ToBinaryString(i, halfRoom), 2);
+				int y = ToInt32(c.ToBinaryString(i + halfRoom, halfRoom), 2);
+				int oTemp = ToInt32(c.ToBinaryString(i + fullRoom, 1), 2);
 
 				bool o = ToBoolean(oTemp);
 
-				house[i / 17].Adjust(x, y, o);
+				house[i / bitsToAdjustRoom].Adjust(x, y, o);
 			}
 		}
 
 		static double BellCurve(double x)
-			=> Pow(E, -(Pow(x, 2) / (2 * Pow(100/*width*/, 2))));
+		{
+			const int peak = 1;
+			const int center = 0;
+			const double width = 100;
+			return peak * Pow(E, -(Pow(x - center, 2) / (2 * Pow(width, 2))));
+		}
 
 		// Event subscription
 		static void ga_OnRunComplete(object sender, GaEventArgs e, House house)

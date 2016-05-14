@@ -3,7 +3,6 @@
 	public class Input
 	{
 		// might want to make all setters internal.
-
 		public int Sons { get; set; }
 		public int Daughters { get; set; }
 

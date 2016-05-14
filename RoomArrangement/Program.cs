@@ -19,6 +19,9 @@ namespace RoomArrangement
 			foreach(Room r in house)
 				WriteLine(r.ToString());
 
+			foreach(System.Tuple<Room, Room> pair in house.Adjacencies)
+				WriteLine(pair.ToString());
+
 			//house.Draw();
 			ReadKey();
 		}
